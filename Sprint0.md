@@ -7,6 +7,7 @@
 + Vorgehensmodell: Scrum
 + Funktionale Anforderungen: Unser System soll Nummernschilder erkennen als Sicherheitssystem. Einerseits wenn eine bekannte Nummer erkannt wird, muss eine Kombination von Handsignalen gegeben werden um das Tor zu öffnen. Andererseits wenn eine unbekannte Nummer vor dem Tor steht, wird erstmals eine Nachricht an das Telefon des Eigentümers geschickt. Dieser hat dann die Auswahl, 
 + Nicht-Funktionale Anforderungen: 
+
 Performanz:
 Das System muss Nummernschilder innerhalb von 10 Sekunden erkennen, bei einer maximalen Entfernung von 5 Metern zwischen Kamera und Fahrzeug. Die maximale Fehlerrate darf 20 % nicht überschreiten. Die Kamera muss auch bei Nacht oder schlechten Lichtverhältnissen zuverlässig arbeiten. Sie wird automatisch aktiviert, sobald eine Bewegung erkannt wird, um Energie zu sparen.
 
@@ -40,3 +41,27 @@ Da unser System Bild- und eventuell Tonaufnahmen verarbeitet, fällt es unter da
 Auch die Speicherung der Videodaten ist gesetzlich geregelt. Die Aufnahmen dürfen nur so lange gespeichert werden, wie sie für den vorgesehenen Zweck notwendig sind, in der Regel maximal 72 Stunden. Danach müssen sie automatisch gelöscht oder überschrieben werden.
 Ein weiterer wichtiger Punkt betrifft die IT-Sicherheit. Da unser System über WLAN funktioniert, muss die Datenübertragung verschlüsselt erfolgen, beispielsweise mit dem Sicherheitsstandard WPA3. Standardpasswörter der Kameras dürfen nicht verwendet werden, und nur autorisierte Personen sollen Zugriff auf die Daten und das System erhalten. Zusätzlich sollten regelmässige Software-Updates durchgeführt werden, um bekannte Sicherheitslücken zu schließen.
 Schliesslich ist auch auf die technische und rechtliche Konformität der Hardware zu achten. Alle verwendeten Komponenten müssen eine gültige CE-Kennzeichnung besitzen, um zu bestätigen, dass sie den europäischen Sicherheitsanforderungen entsprechen.
+
+
+# Schätzen und Priorisieren der Anforderungen.
+
+**Kritische Anforderungen (Must):**
+
+Nummernschilderkennung (13) – Zentrale Hauptfunktion
+Toröffnung mit Handsignal (8) – Sicherheitsschlüssel-Funktion
+Mobile App-Steuerung (8) – Bedienoberfläche für Nutzer
+Kamera (5 m Erkennung) (5) – Notwendige Hardware
+Sicheres Torverhalten bei Fehler (5) – Sicherheitsanforderung
+Fehlerrate < 20 % (5) – Qualitätsstandard
+Reaktionszeit ≤ 10 s (3) – Leistungsanforderung
+Kennzeichen-Datenbank (3) – Basis für Identifikation
+
+**Wichtige, aber nachgelagerte Anforderungen (Should):**
+
+24/7 Betrieb + Fehlerbenachrichtigung (8) – Zuverlässigkeit und Überwachung
+Benachrichtigung bei unbekanntem Kennzeichen (5) – Sicherheits- und Komfortfunktion
+Gestensensor (5) – Zusätzliche Sicherheitsstufe
+
+**Optionale Verbesserungen (Could):**
+
+Energieeffiziente Kameraaktivierung (2) – Optional zur Energieeinsparung
