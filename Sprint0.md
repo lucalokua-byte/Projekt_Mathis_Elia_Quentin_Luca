@@ -1,5 +1,10 @@
 # Sprint 0: Projekt Software Engineering
 
+**Einleitung**
+Im Rahmen des Moduls Software Engineering entwickeln wir ein intelligentes Sicherheitssystem zur automatischen Erkennung von Fahrzeugkennzeichen und Steuerung eines Tores. Wird ein bekanntes Kennzeichen erkannt, öffnet sich das Tor nur nach dem richtigen Handsignal. Bei unbekannten Kennzeichen wird der Eigentümer über eine App benachrichtigt und kann den Zutritt erlauben oder verweigern.
+
+Das Projekt wird in Python entwickelt, folgt dem Scrum-Modell und nutzt GitHub zur Versionsverwaltung. Ziel ist ein sicheres, zuverlässiges und benutzerfreundliches System, das durch moderne Bildverarbeitung und Sensorik den Zugang effizient und geschützt steuert.
+
 **Ziele**
 - Ein sicheres Zugangssystem mit Kennzeichenerkennung erstellen.
 
@@ -20,11 +25,6 @@
 - Drahtlose Kommunikation muss verschlüsselt werden (WPA3).
 
 - Gespeicherte Daten werden spätestens nach 14 Tagen gelöscht.
-
-**Einleitung**
-Im Rahmen des Moduls Software Engineering entwickeln wir ein intelligentes Sicherheitssystem zur automatischen Erkennung von Fahrzeugkennzeichen und Steuerung eines Tores. Wird ein bekanntes Kennzeichen erkannt, öffnet sich das Tor nur nach dem richtigen Handsignal. Bei unbekannten Kennzeichen wird der Eigentümer über eine App benachrichtigt und kann den Zutritt erlauben oder verweigern.
-
-Das Projekt wird in Python entwickelt, folgt dem Scrum-Modell und nutzt GitHub zur Versionsverwaltung. Ziel ist ein sicheres, zuverlässiges und benutzerfreundliches System, das durch moderne Bildverarbeitung und Sensorik den Zugang effizient und geschützt steuert.
 
 **Anforderungen :**
 + Programmiersprache: Python
