@@ -1,5 +1,26 @@
 # Sprint 0: Projekt Software Engineering
 
+**Ziele**
+- Ein sicheres Zugangssystem mit Kennzeichenerkennung erstellen.
+
+- Das Tor öffnet sich nur bei korrekter Kennzeichen- und Handzeichen-Kombination.
+
+- Besitzer verwalten das System über eine mobile App.
+
+- Das System muss ein Kennzeichen innerhalb von 10 Sekunden erkennen.
+
+- Die maximale Fehlerrate für die Erkennung darf 20 % nicht überschreiten.
+
+- Das System muss rund um die Uhr (24/7) funktionsfähig sein.
+
+- Bei einem Ausfall muss das Tor geschlossen bleiben.
+
+- Die Datenschutzgesetze (DSGVO/DSG) müssen eingehalten werden.
+
+- Drahtlose Kommunikation muss verschlüsselt werden (WPA3).
+
+- Gespeicherte Daten werden spätestens nach 14 Tagen gelöscht.
+
 **Einleitung**
 Im Rahmen des Moduls Software Engineering entwickeln wir ein intelligentes Sicherheitssystem zur automatischen Erkennung von Fahrzeugkennzeichen und Steuerung eines Tores. Wird ein bekanntes Kennzeichen erkannt, öffnet sich das Tor nur nach dem richtigen Handsignal. Bei unbekannten Kennzeichen wird der Eigentümer über eine App benachrichtigt und kann den Zutritt erlauben oder verweigern.
 
