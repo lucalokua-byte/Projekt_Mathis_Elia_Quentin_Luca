@@ -5,7 +5,7 @@ Im Rahmen des Moduls Software Engineering entwickeln wir ein intelligentes Siche
 
 Das Projekt wird in Python entwickelt, folgt dem Scrum-Modell und nutzt GitHub zur Versionsverwaltung. Ziel ist ein sicheres, zuverlässiges und benutzerfreundliches System, das durch moderne Bildverarbeitung und Sensorik den Zugang effizient und geschützt steuert.
 
-<<<<<<< HEAD
+
 **Use Case Diagramm**
 ```mermaid
 flowchart TD
@@ -96,7 +96,7 @@ flowchart TD
 - Drahtlose Kommunikation muss verschlüsselt werden (WPA3).
 
 - Gespeicherte Daten werden spätestens nach 14 Tagen gelöscht.
->>>>>>> 631ac70a5ac525e16b90e4ed8ac2e0f783554eb5
+
 
 **Anforderungen :**
 + Programmiersprache: Python
