@@ -5,6 +5,76 @@ Im Rahmen des Moduls Software Engineering entwickeln wir ein intelligentes Siche
 
 Das Projekt wird in Python entwickelt, folgt dem Scrum-Modell und nutzt GitHub zur Versionsverwaltung. Ziel ist ein sicheres, zuverlässiges und benutzerfreundliches System, das durch moderne Bildverarbeitung und Sensorik den Zugang effizient und geschützt steuert.
 
+**Use Case Diagramm**
+```mermaid
+flowchart TD
+  %% ==== Styles ====
+  classDef actor fill:#ffffff,stroke:#333,stroke-dasharray:5 5;
+  classDef usecase fill:#eef5ff,stroke:#333;
+
+  %% ==== Actors (outside boundary) ====
+  Owner["Owner"]:::actor
+  Known["Visitor (Known Plate)"]:::actor
+  Unknown["Visitor (Unknown Plate)"]:::actor
+  PushSvc["Push Notification Service"]:::actor
+  Programm["Programm/Code"]:::actor
+
+  %% ==== System boundary ====
+  subgraph System["License Plate Access Control System"]
+    M([Detect Motion]):::usecase
+    C([Activate Camera]):::usecase
+    L([Recognize License Plate]):::usecase
+    W([Check Whitelist]):::usecase
+    G([Capture Hand Gesture]):::usecase
+    V([Validate Gesture]):::usecase
+    O([Open Gate]):::usecase
+    D([Deny Access]):::usecase
+    N([Send Notification]):::usecase
+    APP([Decision via App]):::usecase
+    WL([Manage Whitelist]):::usecase
+    LOG([Log Access Attempts]):::usecase
+    FD([Detect System Fault]):::usecase
+    FN([Send Fault Notification]):::usecase
+  end
+
+  %% ==== Actor triggers ====
+  Programm --> Unknown
+  Programm --> Known
+  Known --> M
+  Unknown --> M
+
+  %% ==== Core flow ====
+  M --> C --> L --> W
+  G --> V
+
+  %% Logging (always executed with core use cases) ≈ <<include>>
+  L --> LOG
+  O --> LOG
+  D --> LOG
+
+  %% ==== Branching (labels explain conditions) ====
+  L -- "known plate" --> V
+  V -- "valid gesture" --> O
+  V -- "invalid gesture" --> D
+  L -- "unknown plate" --> N
+
+  %% ==== Notifications & decisions ====
+  N --> Owner
+  N --> PushSvc
+  Owner --> APP
+  APP --> O
+  APP --> D
+
+  %% ==== Management ====
+  Owner --> WL
+
+  %% ==== Fault handling (fail-safe: gate stays closed) ====
+  FD --> FN --> Owner
+
+ 
+
+  ```
+
 **Anforderungen :**
 + Programmiersprache: Python
 + Blackbox Testing: Tests manuell durchführen
