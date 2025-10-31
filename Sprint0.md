@@ -37,7 +37,11 @@ Das System soll rund um die Uhr (24/7) funktionsfähig sein. Fehler oder Ausfäl
 
 
 
++ Funktionale Anforderungen: Unser System soll Nummernschilder als Teil eines Sicherheitssystems erkennen. Wird ein bekanntes Kennzeichen erkannt, ist zum Öffnen des Tores zusätzlich eine festgelegte Kombination von Handsignalen erforderlich. Steht ein unbekanntes Fahrzeug vor dem Tor, erhält der Eigentümer zunächst eine Nachricht auf sein Telefon mit den verfügbaren Fahrzeugdaten (Nummernschild, Name usw.). Der Eigentümer kann dann entscheiden, ob das Fahrzeug zugelassen werden soll. Dabei besteht die Möglichkeit, das Kennzeichen dauerhaft zu speichern oder den Zugang zu verweigern. Zusätzlich sollten die Ankunfts- und Abfahrtszeiten protokolliert werden.
++ Nicht-Funktionale Anforderungen:
++ Technische Anforderungen:
 + Gesetzliche und Compliance Anforderungen:
+
 Da unser System Bild- und eventuell Tonaufnahmen verarbeitet, fällt es unter das Datenschutzgesetz (DSG) beziehungsweise die Datenschutz-Grundverordnung (DSGVO). Das bedeutet, dass die Videoüberwachung nur zu einem klar definierten Zweck erfolgen darf, beispielsweise zur Überwachung von Räumen oder zum Schutz von Geräten. Öffentliche Bereiche oder private Grundstücke dürfen dabei nicht erfasst werden. Zudem muss der überwachte Bereich deutlich mit einem Hinweisschild gekennzeichnet werden, das auf die Videoüberwachung und den verantwortlichen Betreiber hinweist.
 Auch die Speicherung der Videodaten ist gesetzlich geregelt. Die Aufnahmen dürfen nur so lange gespeichert werden, wie sie für den vorgesehenen Zweck notwendig sind, in der Regel maximal 72 Stunden. Danach müssen sie automatisch gelöscht oder überschrieben werden.
 Ein weiterer wichtiger Punkt betrifft die IT-Sicherheit. Da unser System über WLAN funktioniert, muss die Datenübertragung verschlüsselt erfolgen, beispielsweise mit dem Sicherheitsstandard WPA3. Standardpasswörter der Kameras dürfen nicht verwendet werden, und nur autorisierte Personen sollen Zugriff auf die Daten und das System erhalten. Zusätzlich sollten regelmässige Software-Updates durchgeführt werden, um bekannte Sicherheitslücken zu schließen.
@@ -66,3 +70,4 @@ Gestensensor (5) – Zusätzliche Sicherheitsstufe
 **Optionale Verbesserungen (Could):**
 
 Energieeffiziente Kameraaktivierung (2) – Optional zur Energieeinsparung
+
