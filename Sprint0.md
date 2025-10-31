@@ -13,27 +13,27 @@ Das Projekt wird in Python entwickelt, folgt dem Scrum-Modell und nutzt GitHub z
 + Funktionale Anforderungen: Unser System soll Nummernschilder erkennen als Sicherheitssystem. Einerseits wenn eine bekannte Nummer erkannt wird, muss eine Kombination von Handsignalen gegeben werden um das Tor zu öffnen. Andererseits wenn eine unbekannte Nummer vor dem Tor steht, wird erstmals eine Nachricht an das Telefon des Eigentümers geschickt. Dieser hat dann die Auswahl, 
 + Nicht-Funktionale Anforderungen: 
 
-Performanz:
-Das System muss Nummernschilder innerhalb von 10 Sekunden erkennen, bei einer maximalen Entfernung von 5 Metern zwischen Kamera und Fahrzeug. Die maximale Fehlerrate darf 20 % nicht überschreiten. Die Kamera muss auch bei Nacht oder schlechten Lichtverhältnissen zuverlässig arbeiten. Sie wird automatisch aktiviert, sobald eine Bewegung erkannt wird, um Energie zu sparen.
-Usability:
-Die Bedienung des Systems soll sehr einfach sein. Der Benutzer muss nur die Kamera mit seinem Smartphone verbinden, um Benachrichtigungen zu erhalten. Über eine intuitive App kann das Tor in wenigen Schritten gesteuert werden. Alle wichtigen Funktionen wie das Hinzufügen von Kennzeichen oder das Öffnen des Tors sind zu finden.
-Sicherheit:
-Das Tor öffnet sich nur, wenn sowohl ein bekanntes Kennzeichen erkannt als auch das richtige Handsignal gegeben wird. Im Fall eines Systemfehlers oder Stromausfalls bleibt das Tor aus Sicherheitsgründen geschlossen.
-Datenschutz:
-Erfasste Daten werden für Sicherheitszwecke genutzt und nach spätestens 14 Tagen automatisch gelöscht. Der Eigentümer kann die Daten zusätzlich jederzeit manuell löschen. 
-Zuverlässigkeit:
-Das System soll rund um die Uhr (24/7) funktionsfähig sein. Fehler oder Ausfälle werden automatisch erkannt und als Benachrichtigung an die App des Eigentümers gesendet, damit schnell reagiert werden kann.
+    Performanz:
+    Das System muss Nummernschilder innerhalb von 10 Sekunden erkennen, bei einer maximalen Entfernung von 5 Metern zwischen Kamera und Fahrzeug. Die maximale Fehlerrate darf 20 % nicht überschreiten. Die Kamera muss auch bei Nacht oder schlechten Lichtverhältnissen zuverlässig arbeiten. Sie wird automatisch aktiviert, sobald eine Bewegung erkannt wird, um Energie zu sparen.
+    Usability:
+    Die Bedienung des Systems soll sehr einfach sein. Der Benutzer muss nur die Kamera mit seinem Smartphone verbinden, um Benachrichtigungen zu erhalten. Über eine intuitive App kann das Tor in wenigen Schritten gesteuert werden. Alle wichtigen Funktionen wie das Hinzufügen von Kennzeichen oder das Öffnen des Tors sind zu finden.
+    Sicherheit:
+    Das Tor öffnet sich nur, wenn sowohl ein bekanntes Kennzeichen erkannt als auch das richtige Handsignal gegeben wird. Im Fall eines Systemfehlers oder Stromausfalls bleibt das Tor aus Sicherheitsgründen geschlossen.
+    Datenschutz:
+    Erfasste Daten werden für Sicherheitszwecke genutzt und nach spätestens 14 Tagen automatisch gelöscht. Der Eigentümer kann die Daten zusätzlich jederzeit manuell löschen. 
+    Zuverlässigkeit:
+    Das System soll rund um die Uhr (24/7) funktionsfähig sein. Fehler oder Ausfälle werden automatisch erkannt und als Benachrichtigung an die App des Eigentümers gesendet, damit schnell reagiert werden kann.
 
 + Technische Anforderungen: Hardware
-1.	Kamera: Ausreichende Qualität für die Kennzeichenerkennung (Hardware)
-2.	Gestensensor: Zuverlässiges Gerät zur Erkennung der "Handzeichen". (Hardware)
-3.	Zentraleinheit: Rechenleistung für schnelle Verarbeitung.(Hardware)
-4.	Tor-Schnittstelle: Verbindung zum elektrischen Tor für die Steuerung. (Hardware)
-6.	Datenbank: Gesicherte Liste der zugelassenen Kennzeichen. (Software)
-7.	Gestenprüfung: Algorithmus zur Validierung der Geste. (Software)
-8.	Alarm/Benachrichtigung: System zum schnellen Senden von Push-Nachrichten. (Software)
-9.	Mobile App: Schnittstelle zum Empfangen des Alarms und zur Fernsteuerung. (Software)
-10.	Protokollierung: Speicherung von Zugängen und Versuchen. (Software)
+    1.	Kamera: Ausreichende Qualität für die Kennzeichenerkennung (Hardware)
+    2.	Gestensensor: Zuverlässiges Gerät zur Erkennung der "Handzeichen". (Hardware)
+    3.	Zentraleinheit: Rechenleistung für schnelle Verarbeitung.(Hardware)
+    4.	Tor-Schnittstelle: Verbindung zum elektrischen Tor für die Steuerung. (Hardware)
+    6.	Datenbank: Gesicherte Liste der zugelassenen Kennzeichen. (Software)
+    7.	Gestenprüfung: Algorithmus zur Validierung der Geste. (Software)
+    8.	Alarm/Benachrichtigung: System zum schnellen Senden von Push-Nachrichten. (Software)
+    9.	Mobile App: Schnittstelle zum Empfangen des Alarms und zur Fernsteuerung. (Software)
+    10.	Protokollierung: Speicherung von Zugängen und Versuchen. (Software)
 
 
 
