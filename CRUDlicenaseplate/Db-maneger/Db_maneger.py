@@ -15,4 +15,13 @@ class DBManger:
         self.license_plates = []
 
         #Load existing data from the JSON file if it exists
-        self.load_data()   
+        self.load_data()
+        
+    def load_data(self):
+        #Load data from the JSON file if it exists
+        if os.path.exists(self.filename):
+            with open(self.filename,'r', encoding='utf-8') as file:
+                self.license_plates = json.load(file)
+        else:
+            self.license_plates = []
+            
