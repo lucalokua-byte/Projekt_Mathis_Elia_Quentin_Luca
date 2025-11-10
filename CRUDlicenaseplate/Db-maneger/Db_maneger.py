@@ -52,3 +52,16 @@ class DBManger:
                 self.save_data()
                 return True
         return False
+    
+    def find(self, license_plate):
+        #Check if a license plate exists in the database.
+        #Returns the record if found, None otherwise.
+
+        for record in self.license_plates:
+            if record['license_plate'] == license_plate:
+                return record
+        return None
+    
+    def list_all(self):
+        #Return a list of all license plates in the database.
+        return self.license_plates
