@@ -35,7 +35,7 @@ class DBManager:
         # Add a licrense plate to the database if it's not already present.
         #Returns True if added, False if already exists.
 
-        if not self.find(license_plate):
+        if not self.find(license_plate, verbose=False):
             self.license_plates.append({'license_plate': license_plate})
             self.save_data()
             return True
@@ -53,18 +53,28 @@ class DBManager:
                 return True
         return False
     
-    def find(self, license_plate):
-        #Check if a license plate exists in the database.
-        #Returns the record if found, None otherwise.
-
-        for record in self.license_plates:
-            if record['license_plate'] == license_plate:
-                return record
-        return None
+   
+    def find(self, license_plate, verbose=True):
+     for record in self.license_plates:
+        if record['license_plate'] == license_plate:
+            if verbose: # added parameter to control verbosity(verbosity is added)
+             print(f"License plate '{license_plate}' found in database.")
+            return record
+     if verbose:   
+      print(f"License plate '{license_plate}' NOT found in database.")
+     return None
+    
     
     def list_all(self):
         #Return a list of all license plates in the database.
         return self.license_plates
+    
+    def clear_database(self):
+        #Clear all license plates from the database.
+        self.license_plates = []
+        self.save_data()
+    
+    
 
 # Example usage:
 if __name__ == "__main__":
@@ -72,11 +82,10 @@ if __name__ == "__main__":
     db_manager.add_license_plate("ABC123")
     db_manager.add_license_plate("XYZ789")
     db_manager.add_license_plate("LMN456")
-    db_manager.find("XYZ789")
     db_manager.remove_license_plate("LMN456")
-    db_manager.find("LMN456")# it should return None
+    db_manager.find("LMN456")
     db_manager.add_license_plate("ABC123")  # Attempt to add duplicate
     db_manager.add_license_plate("DEF321")
     print(db_manager.list_all())
-    db_manager.remove_license_plate("ABC123")
-    print(db_manager.list_all())
+    
+ 
