@@ -1,0 +1,15 @@
+# Created by coverage.py
+# .gitignore CORRECT pour un projet Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+*.tflite
+*.h5
+*.pth
+*.model
+.DS_Store
