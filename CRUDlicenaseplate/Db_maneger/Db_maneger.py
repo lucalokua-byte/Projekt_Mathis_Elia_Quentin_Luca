@@ -1,7 +1,7 @@
 import json
 import os 
 
-class DBManger:
+class DBManager:
 
     def __init__(self,folder,filename):
 
@@ -41,7 +41,7 @@ class DBManger:
             return True
         return False
     
-    def remove_licence_plate(self, license_plate):
+    def remove_license_plate(self, license_plate):
 
         #Remove a license plate from the database if it exists.
         #Returns True if removed, False if not found.
@@ -65,3 +65,18 @@ class DBManger:
     def list_all(self):
         #Return a list of all license plates in the database.
         return self.license_plates
+
+# Example usage:
+if __name__ == "__main__":
+    db_manager = DBManager("data", "license_plates.json")
+    db_manager.add_license_plate("ABC123")
+    db_manager.add_license_plate("XYZ789")
+    db_manager.add_license_plate("LMN456")
+    db_manager.find("XYZ789")
+    db_manager.remove_license_plate("LMN456")
+    db_manager.find("LMN456")# it should return None
+    db_manager.add_license_plate("ABC123")  # Attempt to add duplicate
+    db_manager.add_license_plate("DEF321")
+    print(db_manager.list_all())
+    db_manager.remove_license_plate("ABC123")
+    print(db_manager.list_all())

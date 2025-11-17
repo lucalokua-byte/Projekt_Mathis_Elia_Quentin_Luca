@@ -1,23 +1,30 @@
-import unittest 
-import os 
-from CRUDlicenaseplate.Db_maneger.Db_maneger import DbManager
+import os
+import sys
+import unittest
+
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+
+from Db_maneger import Db_maneger as DBManager
+
 
 class TestDbManager(unittest.TestCase):
 
-    def setup(self):
+    def setUp(self):
 
         #Setup a test database manager with a temporary file
 
         self.test_folder = "test_data"
         self.test_filename ="test_licence_plates.json"
-        self.db= DbManager(self.test_folder,self.test_filename)
+        self.db = DBManager(self.test_folder, self.test_filename)
 
     def tearDown(self):
 
         #Clean up the test database file after tests
 
         test_file_path = os.path.join(self.test_folder,self.test_filename)
-        if os.path.existests(test_file_path):
+        if os.path.exists(test_file_path):
             os.remove(test_file_path)
         if os.path.exists(self.test_folder):
             os.rmdir(self.test_folder)
@@ -51,7 +58,7 @@ class TestDbManager(unittest.TestCase):
 
         #Test removing a non-existent license plate
 
-        result = self.db.remove_licence_plate("NONEXISTENT")
+        result = self.db.remove_license_plate("NONEXISTENT")
         self.assertFalse(result)
     
     def test_list_all(self):
@@ -73,3 +80,4 @@ class TestDbManager(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+        

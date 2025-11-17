@@ -6,7 +6,7 @@ Im Rahmen des Moduls Software Engineering entwickeln wir ein intelligentes Siche
 Das Projekt wird in Python entwickelt, folgt dem Scrum-Modell und nutzt GitHub zur Versionsverwaltung. Ziel ist ein sicheres, zuverlässiges und benutzerfreundliches System, das durch moderne Bildverarbeitung und Sensorik den Zugang effizient und geschützt steuert.
 
 
-**Use Case Diagramm**
+**Ablauf  Diagramm**
 ```mermaid
 flowchart TD
   %% ==== Styles ====
