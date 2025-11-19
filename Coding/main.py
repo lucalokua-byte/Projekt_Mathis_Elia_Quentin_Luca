@@ -2,67 +2,11 @@ import cv2
 import mediapipe as mp
 import time
 import argparse
+import time
 from camera_manager import CameraManager
-from Fahrzeugerkennung import ObjectDetector, Camera, DetectionProcessor
+from Fahrzeugerkennung import CarDetectionApp
 from plate_recognition import PlateRecognizer
 from utils import PlateLogger, draw_detection_results
-
-def fahrzeugerkennung(camera_index=0, score_threshold=0.2):
-    """
-    Vehicle detection function
-    
-    Args:
-        camera_index: Camera index (default: 0)
-        score_threshold: Confidence threshold (default: 0.2)
-    """
-    try:
-        # Initialize application
-        detector = ObjectDetector(score_threshold=score_threshold)
-        camera = Camera(camera_index=camera_index)
-        processor = DetectionProcessor()
-        
-        print("Vehicle detection in progress...")
-        print("CONSOLE ALERT for cars with +30% confidence")
-        print("Press 'q' to quit")
-        
-        running = True
-        
-        while running:
-            # Capture frame
-            frame = camera.read_frame()
-            
-            # Convert for MediaPipe
-            rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
-            
-            # Detect objects
-            timestamp = camera.get_timestamp()
-            detection_result = detector.detector.detect_for_video(mp_image, timestamp)
-            
-            # Process detections
-            processed_frame, car_detected = processor.process_detections(detection_result, frame)
-            
-            # Add FPS
-            fps = camera.get_fps()
-            cv2.putText(processed_frame, f"FPS: {fps:.1f}", (10, frame.shape[0] - 10),
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
-            
-            # Display image
-            cv2.imshow('Vehicle Detection - Alert +30%', processed_frame)
-            
-            # Check for 'q' key to quit
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                running = False
-                
-    except Exception as e:
-        print(f"Error: {e}")
-    finally:
-        camera.release()
-        cv2.destroyAllWindows()
-        print("Detection completed")
-
-    
-
 
 class NumberPlateRecognitionSystem:
     def __init__(self, camera_id=0, display=True, log_results=True):
@@ -140,7 +84,8 @@ def main():
     print("=== INTELLIGENT DETECTION SYSTEM ===")
     
     # Start vehicle detection
-    fahrzeugerkennung()
+    app = CarDetectionApp()
+    app.run()
 
     # Parse command-line arguments for number plate recognition
     parser = argparse.ArgumentParser(description='Number Plate Recognition System')
