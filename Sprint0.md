@@ -5,7 +5,15 @@ Im Rahmen des Moduls Software Engineering entwickeln wir ein intelligentes Siche
 
 Das Projekt wird in Python entwickelt, folgt dem Scrum-Modell und nutzt GitHub zur Versionsverwaltung. Ziel ist ein sicheres, zuverlässiges und benutzerfreundliches System, das durch moderne Bildverarbeitung und Sensorik den Zugang effizient und geschützt steuert.
 
-
+**Build-Anleitung**
+Es muss python Version 3.12 benutzt werden, für die beste Kompatibilität mit Mediapipe. Die benötigten libraries sind die folgenden die mann mit Pip im vs code installieren kann:
+- opencv-python
+- pytesseract
+- numpy
+- imutils
+- pillow
+- requests
+Für pytesseract muss auf https://github.com/UB-Mannheim/tesseract/wiki Tesseract installiert werden, bevor man den pip install pytesseract macht. Die Installation sollte im folgenden Dateipfad sein: C:\Program Files\Tesseract-OCR\tesseract.exe
 
 **Use Case  Diagramm**
 
