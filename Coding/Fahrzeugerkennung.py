@@ -5,6 +5,7 @@ from mediapipe.tasks.python import vision
 import numpy as np
 import os
 import urllib.request
+import time
 
 
 
@@ -14,7 +15,7 @@ class ObjectDetector:
         self.score_threshold = score_threshold
         self.detector = None
         self._download_model_if_needed()
-        self._initialize_detector()
+        self._initialize_detector() 
     
     def _download_model_if_needed(self):
         """Download the model if it doesn't exist"""
@@ -122,7 +123,42 @@ class CarDetectionApp:
         self.camera = Camera()
         self.processor = DetectionProcessor()
         self.running = False
+        self.car_detection_start_time = None
+        self.consecutive_detection_threshold = 2.0 
     
+    def check_consecutive_detection(self, car_detected):
+        """Check if car has been detected for 2 consecutive seconds"""
+        current_time = time.time()
+        
+        if car_detected:
+            if self.car_detection_start_time is None:
+                # First detection, start the timer
+                self.car_detection_start_time = current_time
+                print("Starting car detection...")
+            
+            # Calculate detection duration
+            detection_duration = current_time - self.car_detection_start_time
+            
+            # Check if 2-second threshold is reached
+            if detection_duration >= self.consecutive_detection_threshold:
+                print(f"ALERT: Vehicle detected for {detection_duration:.1f} seconds!")
+                print("Stopping system...")
+                return True, detection_duration
+                
+            return False, detection_duration
+        else:
+            # Reset timer if no detection
+            self.car_detection_start_time = None
+            return False, 0
+        
+    def add_detection_timer_to_frame(self, frame, detection_duration):
+        """Add detection timer to the frame"""
+        timer_text = f"Detection: {detection_duration:.1f}s"
+        color = (0, 0, 255) if detection_duration >= self.consecutive_detection_threshold else (255, 255, 255)
+        cv2.putText(frame, timer_text, (10, 30),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
+        return frame    
+
     def add_fps_to_frame(self, frame):
         """Add FPS counter to the frame"""
         fps = self.camera.get_fps()
@@ -139,7 +175,7 @@ class CarDetectionApp:
         """Run the detection application"""
         print("Detection in progress...")
         print("CONSOLE ALERT for cars with +30% confidence")
-        print("Press 'q' to quit")
+        print("System will shut down after 2 seconds of consecutive car detection or press 'q' to quit")
         
         self.running = True
         
@@ -157,6 +193,17 @@ class CarDetectionApp:
                 
                 # Process detections
                 processed_frame, car_detected = self.processor.process_detections(detection_result, frame)
+
+                # Check consecutive detection
+                should_stop, detection_duration = self.check_consecutive_detection(car_detected)
+
+                # Stop if 2 seconds of detection
+                if should_stop:
+                    self.stop()
+                    break
+
+                # Add timer to the frame
+                processed_frame = self.add_detection_timer_to_frame(processed_frame, detection_duration)
                 
                 # Add FPS counter
                 processed_frame = self.add_fps_to_frame(processed_frame)
