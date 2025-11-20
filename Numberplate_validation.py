@@ -66,9 +66,11 @@ class UnknownPlateHandler:
         """
         if decision == 'ALLOW':
             print(f"Access GRANTED for license plate: {plate_number}")
+            print(f"The Portal is oppening")
             return True
         else:  # DENY or any other value
             print(f"Access DENIED for license plate: {plate_number}")
+            print(f"The Portal is closed")
             return False
 
 
