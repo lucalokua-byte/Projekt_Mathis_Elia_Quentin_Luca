@@ -50,7 +50,7 @@ class TestDbManager(unittest.TestCase):
         #Test removing a license plate
 
         self.db.add_license_plate("XYZ789")
-        result = self.db.remove_licence_plate("XYZ789")
+        result = self.db.remove_license_plate("XYZ789")
         self.assertTrue(result)
         self.assertIsNone(self.db.find("XYZ789"))
 
