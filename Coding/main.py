@@ -3,10 +3,15 @@ import mediapipe as mp
 import time
 import argparse
 import time
+import os
+import json
 from camera_manager import CameraManager
 from Fahrzeugerkennung import CarDetectionApp
 from plate_recognition import PlateRecognizer
 from utils import PlateLogger, draw_detection_results
+from Db_maneger.AbstractDBManager import AbstractDBManager
+from Db_maneger.Db_maneger import DBManager
+
 
 class NumberPlateRecognitionSystem:
     def __init__(self, camera_id=0, display=True, log_results=True):
@@ -15,6 +20,8 @@ class NumberPlateRecognitionSystem:
         self.plate_logger = PlateLogger() if log_results else None
         self.display = display
         self.detected_plates = set()
+
+        self.db_manager:AbstractDBManager = DBManager("data", "license_plates.json")
         
     def start(self):
         """Start the number plate recognition system"""
@@ -62,6 +69,13 @@ class NumberPlateRecognitionSystem:
         if plate_text not in self.detected_plates:
             print(f"New plate detected: {plate_text}")
             self.detected_plates.add(plate_text)
+
+            # Add to database
+            added = self.db_manager.add_license_plate(plate_text)
+            if added:
+                print(f"Plate {plate_text} added to database.")
+            else:
+                print(f"Plate {plate_text} already exists in database.")
             
             if self.plate_logger:
                 self.plate_logger.log_plate(plate_text, result.get('confidence', 1.0))
@@ -77,6 +91,10 @@ class NumberPlateRecognitionSystem:
         """Stop the system and cleanup"""
         self.camera_manager.stop_capture()
         cv2.destroyAllWindows()
+        print("\n Final logged plates:")
+        for plate in self.db_manager.list_all():
+            self.db_manager.find(plate['license_plate'])
+            print(f"Logged plate: {plate['license_plate']}")
         print("System stopped.")
 
 def main():
