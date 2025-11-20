@@ -1,7 +1,7 @@
 import json
 import os 
-
-class DBManager:
+from Db_maneger.AbstractDBManager import AbstractDBManager
+class DBManager(AbstractDBManager):
 
     def __init__(self,folder,filename):
 
