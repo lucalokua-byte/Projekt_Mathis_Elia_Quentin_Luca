@@ -6,7 +6,7 @@ currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 
-from Db_maneger import Db_maneger as DBManager
+from Db_maneger.Db_maneger import DBManager
 
 
 class TestDbManager(unittest.TestCase):
