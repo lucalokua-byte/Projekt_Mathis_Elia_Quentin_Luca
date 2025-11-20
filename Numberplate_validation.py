@@ -66,11 +66,12 @@ class UnknownPlateHandler:
         """
         if decision == 'ALLOW':
             print(f"Access GRANTED for license plate: {plate_number}")
-            print(f"The Portal is oppening")
+            print(f"The portal is oppening")
+
             return True
         else:  # DENY or any other value
             print(f"Access DENIED for license plate: {plate_number}")
-            print(f"The Portal is closed")
+            print(f"The portal is closed")
             return False
 
 
@@ -85,8 +86,7 @@ if __name__ == "__main__":
     result = handler.handle_unknown_plate(test_plate)
     
     print(f"\n Final result: Access {'GRANTED' if result else 'DENIED'}")
-
-
+2
 """
 # Programm to put in the main
 
