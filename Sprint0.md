@@ -13,6 +13,7 @@ Es muss python Version 3.12 benutzt werden, für die beste Kompatibilität mit M
 - imutils
 - pillow
 - requests
+- mediapipe
 Für pytesseract muss auf https://github.com/UB-Mannheim/tesseract/wiki Tesseract installiert werden, bevor man den pip install pytesseract macht. Die Installation sollte im folgenden Dateipfad sein: C:\Program Files\Tesseract-OCR\tesseract.exe
 
 **Use Case  Diagramm**
