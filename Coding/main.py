@@ -6,11 +6,11 @@ import time
 import os
 import json
 from camera_manager import CameraManager
-from Fahrzeugerkennung import CarDetectionApp
 from plate_recognition import PlateRecognizer
 from utils import PlateLogger, draw_detection_results
 from Db_maneger.AbstractDBManager import AbstractDBManager
 from Db_maneger.Db_maneger import DBManager
+from vehicle_detection.app import CarDetectionApp
 
 
 class NumberPlateRecognitionSystem:
@@ -100,8 +100,9 @@ class NumberPlateRecognitionSystem:
 def main():
     """Unified main function"""
     print("=== INTELLIGENT DETECTION SYSTEM ===")
-    
+
     # Start vehicle detection
+    print("  VEHICLE DETECTION SYSTEM")
     app = CarDetectionApp()
     app.run()
 
