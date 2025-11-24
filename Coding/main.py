@@ -5,7 +5,6 @@ import argparse
 import os
 import json
 from camera_manager import CameraManager
-from plate_recognition import PlateRecognizer
 from utils import PlateLogger, draw_detection_results
 from Db_maneger.AbstractDBManager import AbstractDBManager
 from Db_maneger.Db_maneger import DBManager
