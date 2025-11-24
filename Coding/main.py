@@ -2,7 +2,6 @@ import cv2
 import mediapipe as mp
 import time
 import argparse
-import time
 import os
 import json
 from camera_manager import CameraManager
@@ -11,6 +10,8 @@ from utils import PlateLogger, draw_detection_results
 from Db_maneger.AbstractDBManager import AbstractDBManager
 from Db_maneger.Db_maneger import DBManager
 from vehicle_detection.app import CarDetectionApp
+from number_plate_detection.NumberPlateDetection_Interface import NumberPlateDetection
+from number_plate_detection.NumberPlateRecognition import PlateRecognizer
 
 
 class NumberPlateRecognitionSystem:
