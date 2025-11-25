@@ -74,30 +74,31 @@ class CarDetectionApp:
                 print(f"Error: {e}")
                 self.stop()
     
-    def show_report(self):
-        """Display temporary performance statistics"""
-        stats = self.system.get_performance_stats()
-        print("\nTEMPORARY REPORT:")
-        print(f"   Uptime: {stats['uptime']:.1f}s")
-        print(f"   Vehicles detected: {stats['total_vehicles_detected']}")
-        print(f"   Mode: {stats['current_mode']}")
-        print(f"   Camera status: {stats['camera_status']}")
+
+    # def show_report(self):
+    #     """Display temporary performance statistics"""
+    #     stats = self.system.get_performance_stats()
+    #     print("\nTEMPORARY REPORT:")
+    #     print(f"   Uptime: {stats['uptime']:.1f}s")
+    #     print(f"   Vehicles detected: {stats['total_vehicles_detected']}")
+    #     print(f"   Mode: {stats['current_mode']}")
+    #     print(f"   Camera status: {stats['camera_status']}")
     
-    def stop(self):
-        """Stop the application and generate final report"""
-        self.running = False
+    # def stop(self):
+    #     """Stop the application and generate final report"""
+    #     self.running = False
         
-        # Generate final session report
-        final_report = self.system.generate_report()
+    #     # Generate final session report
+    #     final_report = self.system.generate_report()
         
-        print("\nFINAL REPORT:")
-        print(f"   Session duration: {final_report['session_duration']:.1f}s")
-        print(f"   Vehicles detected: {final_report['vehicles_detected']}")
-        print(f"   Success rate: {final_report['success_rate']:.1%}")
-        print(f"   End time: {final_report['end_timestamp']}")
+    #     print("\nFINAL REPORT:")
+    #     print(f"   Session duration: {final_report['session_duration']:.1f}s")
+    #     print(f"   Vehicles detected: {final_report['vehicles_detected']}")
+    #     print(f"   Success rate: {final_report['success_rate']:.1%}")
+    #     print(f"   End time: {final_report['end_timestamp']}")
         
-        # Cleanup resources
-        if self.system.camera:
-            self.system.camera.release()
-        cv2.destroyAllWindows()
-        print("Application terminated")
+    #     # Cleanup resources
+    #     if self.system.camera:
+    #         self.system.camera.release()
+    #     cv2.destroyAllWindows()
+    #     print("Application terminated")

@@ -27,12 +27,15 @@ class VehicleDetectionSystemInterface(ABC):
         """Execute defined actions after prolonged detection"""
         pass
     
+    """
     @abstractmethod
     def generate_report(self) -> Dict[str, Any]:
-        """Generate a complete detection session report"""
+        #Generate a complete detection session report
         pass
     
+        
     @abstractmethod
     def get_performance_stats(self) -> Dict[str, Any]:
-        """Return real-time performance statistics"""
+        #Return real-time performance statistics
         pass
+    """

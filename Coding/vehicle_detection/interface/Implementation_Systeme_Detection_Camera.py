@@ -111,6 +111,7 @@ class CameraVehicleDetectionSystem(VehicleDetectionSystemInterface):
             "end_timestamp": time.strftime("%Y-%m-%d %H:%M:%S")
         }
     
+    """
     def get_performance_stats(self) -> Dict[str, Any]:
         return {
             "uptime": time.time() - self.session_start_time,
@@ -120,14 +121,15 @@ class CameraVehicleDetectionSystem(VehicleDetectionSystemInterface):
             "camera_status": "active" if self.camera and self.camera.cap else "inactive",
             "last_detection": time.strftime("%H:%M:%S") if self.vehicles_detected > 0 else "none"
         }
-    
+    """
+        
     def _check_consecutive_detection(self, vehicle_detected: bool):
         current_time = time.time()
         
         if vehicle_detected:
             if self.vehicle_detection_start_time is None:
                 self.vehicle_detection_start_time = current_time
-                print("⏱️ Vehicle detection started...")
+                print(" Vehicle detection started...")
             
             detection_duration = current_time - self.vehicle_detection_start_time
             
