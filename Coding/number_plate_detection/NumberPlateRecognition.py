@@ -20,7 +20,7 @@ class BasicPlateRecognizer(NumberPlateDetection):
             self._initialized = True
             return True
         except Exception as e:
-            print(f"❌ Plate recognizer setup failed: {e}")
+            print(f"Plate recognizer setup failed: {e}")
             return False
     
     def preprocess_image(self, image) -> Any:
@@ -162,7 +162,7 @@ class BasicPlateRecognizer(NumberPlateDetection):
     def cleanup(self):
         """Cleanup resources"""
         self._initialized = False
-        print("✅ Plate recognizer cleaned up")
+        print("Plate recognizer cleaned up")
 
 # Backward compatibility - alias
 PlateRecognizer = BasicPlateRecognizer

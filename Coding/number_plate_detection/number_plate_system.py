@@ -92,7 +92,7 @@ class NumberPlateRecognitionSystem:
         print("System stopped.")
 
 class CompleteDetectionSystem(IntelligentDetectionSystem):
-    def __init__(self, camera_id=0, display=True, log_results=True):  # ✅ ADD THESE PARAMETERS
+    def __init__(self, camera_id=0, display=True, log_results=True):  
         self.camera_id = camera_id
         self.display = display
         self.log_results = log_results
@@ -108,8 +108,8 @@ class CompleteDetectionSystem(IntelligentDetectionSystem):
     def start_plate_recognition(self) -> bool:
         self.plate_system = NumberPlateRecognitionSystem(
             camera_id=self.camera_id,
-            display=self.display,           # ✅ PASS THE PARAMETERS
-            log_results=self.log_results    # ✅ PASS THE PARAMETERS
+            display=self.display,           # PASS THE PARAMETERS
+            log_results=self.log_results    # PASS THE PARAMETERS
         )
         return self.plate_system.start()
     
