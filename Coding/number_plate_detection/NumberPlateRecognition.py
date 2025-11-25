@@ -3,7 +3,7 @@ import pytesseract
 import numpy as np
 import re
 from typing import List, Dict, Any
-from NumberPlateDetection_Interface import NumberPlateDetection
+from .NumberPlateDetection_Interface import NumberPlateDetection
 
 class BasicPlateRecognizer(NumberPlateDetection):
     """
@@ -18,7 +18,6 @@ class BasicPlateRecognizer(NumberPlateDetection):
         try:
             pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
             self._initialized = True
-            print("✅ Plate recognizer initialized successfully")
             return True
         except Exception as e:
             print(f"❌ Plate recognizer setup failed: {e}")
@@ -27,7 +26,9 @@ class BasicPlateRecognizer(NumberPlateDetection):
     def preprocess_image(self, image) -> Any:
         """Preprocess the image for better OCR results"""
         if not self._initialized:
-            raise RuntimeError("Plate recognizer not initialized. Call setup() first.")
+            print("Plate recognizer not initialized. Attempting auto-setup...")
+            if not self.setup():
+                raise RuntimeError("Plate recognizer not initialized and auto-setup failed.")
             
         # Convert to grayscale
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -51,7 +52,9 @@ class BasicPlateRecognizer(NumberPlateDetection):
     def detect_plate_regions(self, image) -> List[Any]:
         """Detect potential license plate regions in the image"""
         if not self._initialized:
-            raise RuntimeError("Plate recognizer not initialized. Call setup() first.")
+            print("Plate recognizer not initialized. Attempting auto-setup...")
+        if not self.setup():
+            raise RuntimeError("Plate recognizer not initialized and auto-setup failed.")
             
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         
@@ -86,7 +89,9 @@ class BasicPlateRecognizer(NumberPlateDetection):
     def extract_plate_text(self, plate_image) -> str:
         """Extract text from the plate region using OCR"""
         if not self._initialized:
-            raise RuntimeError("Plate recognizer not initialized. Call setup() first.")
+            print("Plate recognizer not initialized. Attempting auto-setup...")
+        if not self.setup():
+            raise RuntimeError("Plate recognizer not initialized and auto-setup failed.")
             
         try:
             # Preprocess the plate image
@@ -123,8 +128,10 @@ class BasicPlateRecognizer(NumberPlateDetection):
     def recognize_from_frame(self, frame) -> List[Dict[str, Any]]:
         """Main method to recognize license plates from a frame"""
         if not self._initialized:
-            raise RuntimeError("Plate recognizer not initialized. Call setup() first.")
-            
+            print("Plate recognizer not initialized. Attempting auto-setup...")
+            if not self.setup():
+                raise RuntimeError("Plate recognizer not initialized and auto-setup failed.")
+        
         try:
             # Detect plate regions
             plate_contours = self.detect_plate_regions(frame)
