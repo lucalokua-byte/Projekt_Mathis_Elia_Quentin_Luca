@@ -99,12 +99,6 @@ class CompleteDetectionSystem(IntelligentDetectionSystem):
         self.vehicle_app = None
         self.plate_system = None
     
-    def start_vehicle_detection(self) -> bool:
-        from Fahrzeugerkennung import CarDetectionApp
-        self.vehicle_app = CarDetectionApp()
-        self.vehicle_app.run()
-        return True
-    
     def start_plate_recognition(self) -> bool:
         self.plate_system = NumberPlateRecognitionSystem(
             camera_id=self.camera_id,
@@ -112,11 +106,6 @@ class CompleteDetectionSystem(IntelligentDetectionSystem):
             log_results=self.log_results    # PASS THE PARAMETERS
         )
         return self.plate_system.start()
-    
-    def run_complete_system(self) -> bool:
-        if self.start_vehicle_detection():
-            return self.start_plate_recognition()
-        return False
     
     def stop_system(self):
         if self.plate_system:

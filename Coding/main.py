@@ -10,7 +10,7 @@ from Db_maneger.AbstractDBManager import AbstractDBManager
 from Db_maneger.Db_maneger import DBManager
 from vehicle_detection.app import CarDetectionApp
 from number_plate_detection.NumberPlateDetection_Interface import NumberPlateDetection
-from number_plate_detection.NumberPlateRecognition import PlateRecognizer, detect_plate_and_return
+from number_plate_detection.NumberPlateRecognition import PlateRecognizer
 from number_plate_detection.number_plate_system import CompleteDetectionSystem
 
 
@@ -36,8 +36,8 @@ def main():
         display=not args.no_display,
         log_results=not args.no_log
     )
-    system.run_complete_system()
-
+    system.start_plate_recognition()
+    '''
     """Programme principal qui intègre les deux systèmes"""
     print("=== SYSTÈME COMPLET DE RECONNAISSANCE ===")
     
@@ -65,5 +65,6 @@ def main():
     else:
         print("🚪 La porte reste fermée...")
         # Ajouter ici la logique pour garder la porte fermée
+    '''
 if __name__ == "__main__":
     main()
