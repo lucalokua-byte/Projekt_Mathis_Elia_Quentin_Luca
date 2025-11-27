@@ -4,14 +4,15 @@ import time
 import argparse
 import os
 import json
-from camera_manager import CameraManager
+from camera_manager import CameraManager 
 from utils import PlateLogger, draw_detection_results
 from Db_maneger.AbstractDBManager import AbstractDBManager
 from Db_maneger.Db_maneger import DBManager
 from vehicle_detection.app import CarDetectionApp
 from number_plate_detection.NumberPlateDetection_Interface import NumberPlateDetection
-from number_plate_detection.NumberPlateRecognition import PlateRecognizer
+from number_plate_detection.NumberPlateRecognition import PlateRecognizer, detect_plate_and_return
 from number_plate_detection.number_plate_system import CompleteDetectionSystem
+
 
 def main():
     """Unified main function"""
@@ -37,5 +38,32 @@ def main():
     )
     system.run_complete_system()
 
+    """Programme principal qui intègre les deux systèmes"""
+    print("=== SYSTÈME COMPLET DE RECONNAISSANCE ===")
+    
+    # Étape 1: Détecter une plaque avec le premier programme
+    print("\n1. 🔍 DÉTECTION DE PLAQUE...")
+    detected_plate = detect_plate_and_return()
+    
+    if not detected_plate:
+        print("❌ Aucune plaque détectée. Arrêt du système.")
+        return
+    
+    print(f"\n✅ PLAQUE DÉTECTÉE: {detected_plate}")
+    
+    # Étape 2: Utiliser la plaque détectée dans Numberplate_validation.py
+    print("\n2. 🚨 TRAITEMENT DE LA PLAQUE INCONNUE...")
+    handler = UnknownPlateHandler()
+    access_granted = handler.handle_unknown_plate(detected_plate)  # <-- ICI on utilise la plaque détectée
+    
+    # Étape 3: Résultat final
+    print(f"\n3. 🎯 RÉSULTAT FINAL: Accès {'AUTORISÉ' if access_granted else 'REFUSÉ'}")
+    
+    if access_granted:
+        print("🚪 La porte s'ouvre...")
+        # Ajouter ici la logique pour ouvrir la porte
+    else:
+        print("🚪 La porte reste fermée...")
+        # Ajouter ici la logique pour garder la porte fermée
 if __name__ == "__main__":
     main()
