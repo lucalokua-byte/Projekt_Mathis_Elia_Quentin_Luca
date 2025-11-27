@@ -20,7 +20,7 @@ class CameraVehicleDetectionSystem(VehicleDetectionSystemInterface):
         self.running = False
         self.vehicle_detection_start_time = None
         self.threshold = None
-        self.detection_vehicles = "all_vehicles"
+        self.detection_vehicles = "cars_only"
         self.session_start_time = time.time()
         self.vehicles_detected = 0
         self.false_positives = 0
@@ -105,7 +105,7 @@ class CameraVehicleDetectionSystem(VehicleDetectionSystemInterface):
             "session_duration": session_duration,
             "vehicles_detected": self.vehicles_detected,
             "false_positives": self.false_positives,
-            "detection_mode": self.detection_mode,
+            "detection_mode": self.detection_vehicles,
             "alert_threshold": self.threshold,
             "success_rate": self.vehicles_detected / max(1, self.vehicles_detected + self.false_positives),
             "end_timestamp": time.strftime("%Y-%m-%d %H:%M:%S")
