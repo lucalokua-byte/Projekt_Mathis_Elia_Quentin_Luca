@@ -12,31 +12,39 @@ from interface.Implementation_Systeme_Detection_Camera import CameraVehicleDetec
 class CarDetectionApp:
     """
     MAIN VEHICLE DETECTION APPLICATION
-    Uses camera to detect vehicles and automatically stops after 2 seconds of continuous detection
+    Uses camera to detect vehicles and automatically stops after n seconds of continuous detection
     """
     
     def __init__(self):
         # Initialize the detection system
         self.system = CameraVehicleDetectionSystem()
         self.running = False
+        self.threshold = 1.0  # seconds
+
+    def stop(self):
+        #Stop the application gracefully
+        print("\nStopping vehicle detection system...")
+        self.running = False
+        if hasattr(self.system, '_stop_system'):
+            self.system._stop_system()
+        cv2.destroyAllWindows()
     
     def run(self):
-        """Main application loop"""
+        #Main application loop
         print("Vehicle Detection System")
         print("=" * 40)
         
         # Configure detection for standard vehicles with 2-second alert threshold
-        self.system.configure_detection_mode("standard_vehicles")
-        self.system.set_alert_threshold(2.0)
+        self.system.configure_detection_vehicles("all_vehicles")
+        self.system.set_stop_programme(self.threshold)
         
         # Initialize camera and detection components
         if not self.system.initialize_components():
             return
         
         print("\nDetection in progress...")
-        print("• Alerts for vehicles with >30% confidence")
-        print("• Automatic shutdown after 2s of continuous detection") 
-        print("• Press 'q' to quit, 'r' for report\n")
+        print(f" Automatic shutdown after {self.threshold}s of continuous detection") 
+        print(" Press 'q' to quit, 'r' for report\n")
         
         self.running = True
         
@@ -51,7 +59,7 @@ class CarDetectionApp:
                 
                 # Stop if vehicle detected for 2+ seconds
                 if results["threshold_reached"]:
-                    self.system.execute_alert_actions()
+                    self.system.execute_alert_actions(self.threshold)
                     break
                 
                 # Add detection timer and FPS overlay to frame
@@ -68,37 +76,9 @@ class CarDetectionApp:
                 if key == ord('q'):  # Quit application
                     self.stop()
                 elif key == ord('r'):  # Show temporary report
-                    self.show_report()
+                    self.system.show_report()
                     
             except Exception as e:
                 print(f"Error: {e}")
                 self.stop()
     
-
-    # def show_report(self):
-    #     """Display temporary performance statistics"""
-    #     stats = self.system.get_performance_stats()
-    #     print("\nTEMPORARY REPORT:")
-    #     print(f"   Uptime: {stats['uptime']:.1f}s")
-    #     print(f"   Vehicles detected: {stats['total_vehicles_detected']}")
-    #     print(f"   Mode: {stats['current_mode']}")
-    #     print(f"   Camera status: {stats['camera_status']}")
-    
-    # def stop(self):
-    #     """Stop the application and generate final report"""
-    #     self.running = False
-        
-    #     # Generate final session report
-    #     final_report = self.system.generate_report()
-        
-    #     print("\nFINAL REPORT:")
-    #     print(f"   Session duration: {final_report['session_duration']:.1f}s")
-    #     print(f"   Vehicles detected: {final_report['vehicles_detected']}")
-    #     print(f"   Success rate: {final_report['success_rate']:.1%}")
-    #     print(f"   End time: {final_report['end_timestamp']}")
-        
-    #     # Cleanup resources
-    #     if self.system.camera:
-    #         self.system.camera.release()
-    #     cv2.destroyAllWindows()
-    #     print("Application terminated")

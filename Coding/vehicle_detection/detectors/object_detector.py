@@ -20,12 +20,11 @@ class ObjectDetector:
         self._initialize_detector() 
     
     def _download_model_if_needed(self):
-        """Download the AI model if it doesn't exist locally"""
+        """Download the AI model"""
         if not os.path.exists(self.model_path):
             print(" Downloading detection model...")
             url = "https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/int8/1/efficientdet_lite0.tflite"
             urllib.request.urlretrieve(url, self.model_path)
-            print("✅ Model downloaded!")
     
     def _initialize_detector(self):
         """Initialize the MediaPipe object detector with configuration"""

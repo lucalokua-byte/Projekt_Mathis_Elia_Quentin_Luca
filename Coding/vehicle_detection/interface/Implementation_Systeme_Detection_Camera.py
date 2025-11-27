@@ -19,27 +19,27 @@ class CameraVehicleDetectionSystem(VehicleDetectionSystemInterface):
         self.processor = None
         self.running = False
         self.vehicle_detection_start_time = None
-        self.consecutive_detection_threshold = 2.0
-        self.detection_mode = "standard_vehicles"
+        self.threshold = None
+        self.detection_vehicles = "all_vehicles"
         self.session_start_time = time.time()
         self.vehicles_detected = 0
         self.false_positives = 0
     
-    def configure_detection_mode(self, mode: str):
-        valid_modes = {
+    def configure_detection_vehicles(self, vehicles: str):
+        valid_vehicles = {
             "cars_only": ["car", "vehicle"],
             "standard_vehicles": ["car", "truck", "bus", "vehicle"],
             "all_vehicles": ["car", "truck", "bus", "motorcycle", "vehicle"]
         }
         
-        if mode in valid_modes:
-            self.detection_mode = mode
-            print(f" Mode configured: {mode}")
+        if vehicles in valid_vehicles:
+            self.detection_mode = vehicles
+            print(f" Vehicles configured: {vehicles}")
         else:
-            raise ValueError(f"Invalid mode: {mode}")
+            raise ValueError(f"Invalid vehicles: {vehicles}")
     
-    def set_alert_threshold(self, duration_seconds: float):
-        self.consecutive_detection_threshold = duration_seconds
+    def set_stop_programme(self, duration_seconds: float):
+        self.threshold = duration_seconds
         print(f" Alert threshold configured: {duration_seconds}s")
     
     def initialize_components(self) -> bool:
@@ -93,8 +93,8 @@ class CameraVehicleDetectionSystem(VehicleDetectionSystemInterface):
                 "error": str(e)
             }
     
-    def execute_alert_actions(self):
-        print(" ALERT: Vehicle detected for more than 2 seconds!")
+    def execute_alert_actions(self, duration_seconds):
+        print(f" ALERT: Vehicle detected for more than {duration_seconds} seconds!")
         print(" Stopping detection system...")
         self._stop_system()
     
@@ -106,22 +106,39 @@ class CameraVehicleDetectionSystem(VehicleDetectionSystemInterface):
             "vehicles_detected": self.vehicles_detected,
             "false_positives": self.false_positives,
             "detection_mode": self.detection_mode,
-            "alert_threshold": self.consecutive_detection_threshold,
+            "alert_threshold": self.threshold,
             "success_rate": self.vehicles_detected / max(1, self.vehicles_detected + self.false_positives),
             "end_timestamp": time.strftime("%Y-%m-%d %H:%M:%S")
         }
     
-    """
-    def get_performance_stats(self) -> Dict[str, Any]:
-        return {
-            "uptime": time.time() - self.session_start_time,
-            "total_vehicles_detected": self.vehicles_detected,
-            "current_mode": self.detection_mode,
-            "current_alert_threshold": self.consecutive_detection_threshold,
-            "camera_status": "active" if self.camera and self.camera.cap else "inactive",
-            "last_detection": time.strftime("%H:%M:%S") if self.vehicles_detected > 0 else "none"
-        }
-    """
+    def show_report(self):
+        """Display a temporary detection report"""
+        try:
+            print("\n" + "=" * 50)
+            print("TEMPORARY DETECTION REPORT")
+            print("=" * 50)
+
+            report = self.generate_report()
+            
+            # Display information
+            print(f" Session duration: {time.time() - self.session_start_time:.1f} seconds")
+            print(f" Vehicles detected: {self.vehicles_detected}")
+            print(f" False positives: {self.false_positives}")
+            print(f" Detection mode: {self.detection_mode}")
+            print(f" Alert threshold: {self.threshold} seconds")
+            print(f" Success rate: {(self.vehicles_detected / max(1, self.vehicles_detected + self.false_positives)) * 100:.1f}%")
+            print(f" Report generated at: {time.strftime('%Y-%m-%d %H:%M:%S')}")
+            
+            # Calculate detection rate per minute
+            vehicles_per_minute = (report['vehicles_detected'] / report['session_duration']) * 60
+            print(f"Detection rate: {vehicles_per_minute:.1f} vehicles/minute")
+            
+            print("=" * 50)
+            print("Press any key to continue detection...")
+        
+        except Exception as e:
+            print(f"Error generating report: {e}")
+    
         
     def _check_consecutive_detection(self, vehicle_detected: bool):
         current_time = time.time()
@@ -133,7 +150,7 @@ class CameraVehicleDetectionSystem(VehicleDetectionSystemInterface):
             
             detection_duration = current_time - self.vehicle_detection_start_time
             
-            if detection_duration >= self.consecutive_detection_threshold:
+            if detection_duration >= self.threshold:
                 return True, detection_duration
                 
             return False, detection_duration
@@ -144,15 +161,10 @@ class CameraVehicleDetectionSystem(VehicleDetectionSystemInterface):
     def _add_overlays(self, frame, detection_duration: float):
         # Add detection timer overlay
         timer_text = f"Detection: {detection_duration:.1f}s"
-        color = (0, 0, 255) if detection_duration >= self.consecutive_detection_threshold else (255, 255, 255)
+        color = (0, 0, 255) if detection_duration >= self.threshold else (255, 255, 255)
         cv2.putText(frame, timer_text, (10, 30),
                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
-        
-        # Add FPS counter overlay
-        fps = self.camera.get_fps()
-        cv2.putText(frame, f"FPS: {fps:.1f}", (10, frame.shape[0] - 10),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
-        
+                
         return frame
     
     def _stop_system(self):

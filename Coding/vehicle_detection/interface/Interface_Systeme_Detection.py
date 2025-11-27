@@ -8,13 +8,13 @@ class VehicleDetectionSystemInterface(ABC):
     """
     
     @abstractmethod
-    def configure_detection_mode(self, mode: str):
+    def configure_detection_vehicles(self, vehicles: str):
         """Configure the type of vehicles to detect"""
         pass
     
     @abstractmethod
-    def set_alert_threshold(self, duration_seconds: float):
-        """Set the detection duration before triggering alerts"""
+    def set_stop_programme(self, duration_seconds: float):
+        """When a vehicle is detected, how long does it take for the programme to stop automatically?"""
         pass
     
     @abstractmethod
@@ -26,16 +26,3 @@ class VehicleDetectionSystemInterface(ABC):
     def execute_alert_actions(self):
         """Execute defined actions after prolonged detection"""
         pass
-    
-    """
-    @abstractmethod
-    def generate_report(self) -> Dict[str, Any]:
-        #Generate a complete detection session report
-        pass
-    
-        
-    @abstractmethod
-    def get_performance_stats(self) -> Dict[str, Any]:
-        #Return real-time performance statistics
-        pass
-    """
