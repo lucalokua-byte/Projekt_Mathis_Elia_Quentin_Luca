@@ -37,34 +37,6 @@ def main():
         log_results=not args.no_log
     )
     system.start_plate_recognition()
-    '''
-    """Programme principal qui intègre les deux systèmes"""
-    print("=== SYSTÈME COMPLET DE RECONNAISSANCE ===")
-    
-    # Étape 1: Détecter une plaque avec le premier programme
-    print("\n1. 🔍 DÉTECTION DE PLAQUE...")
-    detected_plate = detect_plate_and_return()
-    
-    if not detected_plate:
-        print("❌ Aucune plaque détectée. Arrêt du système.")
-        return
-    
-    print(f"\n✅ PLAQUE DÉTECTÉE: {detected_plate}")
-    
-    # Étape 2: Utiliser la plaque détectée dans Numberplate_validation.py
-    print("\n2. 🚨 TRAITEMENT DE LA PLAQUE INCONNUE...")
-    handler = UnknownPlateHandler()
-    access_granted = handler.handle_unknown_plate(detected_plate)  # <-- ICI on utilise la plaque détectée
-    
-    # Étape 3: Résultat final
-    print(f"\n3. 🎯 RÉSULTAT FINAL: Accès {'AUTORISÉ' if access_granted else 'REFUSÉ'}")
-    
-    if access_granted:
-        print("🚪 La porte s'ouvre...")
-        # Ajouter ici la logique pour ouvrir la porte
-    else:
-        print("🚪 La porte reste fermée...")
-        # Ajouter ici la logique pour garder la porte fermée
-    '''
+
 if __name__ == "__main__":
     main()
