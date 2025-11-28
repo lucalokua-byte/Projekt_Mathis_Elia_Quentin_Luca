@@ -41,7 +41,6 @@ class DBManager(AbstractDBManager):
         if not self.find(license_plate, verbose=False):
             plate_data = {
                 'license_plate': license_plate,
-                'timestamp': timestamp or time.time(),
                 'date_added': time.strftime('%Y-%m-%d %H:%M:%S')
             }
             
@@ -53,10 +52,10 @@ class DBManager(AbstractDBManager):
                 
             self.license_plates.append(plate_data)
             self.save_data()
-            print(f"✅ License plate '{license_plate}' added to database.")
+            print(f"License plate '{license_plate}' added to database.")
             return True
         else:
-            print(f"⚠️ License plate '{license_plate}' already exists in database.")
+            print(f"License plate '{license_plate}' already exists in database.")
             return False
     
     def remove_license_plate(self, license_plate):
