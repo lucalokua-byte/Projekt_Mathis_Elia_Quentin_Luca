@@ -19,7 +19,8 @@ class CarDetectionApp:
         # Initialize the detection system
         self.system = CameraVehicleDetectionSystem()
         self.running = False
-        self.threshold = 1.0  # seconds
+        self.threshold = 3.0  # seconds
+        self.detection_mode = "cars_only"  # options: cars_only, standard_vehicles, all_vehicles
 
     def stop(self):
         #Stop the application gracefully
@@ -35,7 +36,7 @@ class CarDetectionApp:
         print("=" * 40)
         
         # Configure detection for standard vehicles with 2-second alert threshold
-        self.system.configure_detection_vehicles("all_vehicles")
+        self.system.configure_detection_vehicles(self.detection_mode)
         self.system.set_stop_programme(self.threshold)
         
         # Initialize camera and detection components
