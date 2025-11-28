@@ -16,6 +16,8 @@ Es muss python Version 3.12 benutzt werden, für die beste Kompatibilität mit M
 - mediapipe
 Für pytesseract muss auf https://github.com/UB-Mannheim/tesseract/wiki Tesseract installiert werden, bevor man den pip install pytesseract macht. Die Installation sollte im folgenden Dateipfad sein: C:\Program Files\Tesseract-OCR\tesseract.exe
 
+Zur Funktion des Codes den main.py-File ausführen. Dann wird die Kamera angeschaltet, um ein Auto zu detektieren. Wenn ein Auto mindestens eine Sekunde vor die Kamera steht, dann schließt sich diese. Dann wird eine andere Kamera aktiviert, um das Nummernschild zu erkennen. 
+
 **Use Case  Diagramm**
 
 **Funktions-Diagramm**
