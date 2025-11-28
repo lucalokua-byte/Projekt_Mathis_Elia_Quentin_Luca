@@ -16,7 +16,11 @@ Es muss python Version 3.12 benutzt werden, für die beste Kompatibilität mit M
 - mediapipe
 Für pytesseract muss auf https://github.com/UB-Mannheim/tesseract/wiki Tesseract installiert werden, bevor man den pip install pytesseract macht. Die Installation sollte im folgenden Dateipfad sein: C:\Program Files\Tesseract-OCR\tesseract.exe
 
+Zur Funktion des Codes den main.py File ausführen. Dann wird die Kamera vom Device eingeschalten, um in einem Bild ein Auto zu erkennen. Wenn ein Auto mindestens eine Sekunde vor der Kamera steht, dann schließt sich diese. Dann öffnet sich die nächste Seite, um das Nummernschild zu erkennen. 
+
 **Use Case  Diagramm**
+![Use Case Diagram](https://www.plantuml.com/plantuml/png/RP7DQiCm48JlUeh19-VWDoWXRGszb2Oqf3qBUUCiaQKYRHj2wRlNYkoG7uCEoywdtHbf4KK7-UwiihGLY4VWTYTeE90HzaufRSG75AlWsw0xbEjZ5Efc1NJ4q1oPvS5HGBc95B9-Qepg1qTEHRbnU-SF3dNWdv7CjL9fhNQj9HIlRCX5mifg8JmQGp4YRo_mgu3-ZAwgQewo9kblurc7sQtqJhh1rS0xP4skmPiNthBHANeYSgA7gfhKpy1fmFAB75w6qHVzcjnni7-ZVEvOo7AKUsiNr9FLPZz5zLX-DYH_L-lF_Vbaz3-rwDEaR_y7)
+
 
 **Funktions-Diagramm**
 
@@ -39,13 +43,12 @@ flowchart TD
     C([Activate Camera]):::usecase
     L([Recognize License Plate]):::usecase
     W([Check Whitelist]):::usecase
-    G([Capture Hand Gesture]):::usecase
-    V([Validate Gesture]):::usecase
     O([Open Gate]):::usecase
     D([Deny Access]):::usecase
     N([Send Notification]):::usecase
     APP([Decision via App]):::usecase
     WL([Manage Whitelist]):::usecase
+    BL([Manage BlackList]):::usecase
     LOG([Log Access Attempts]):::usecase
     FD([Detect System Fault]):::usecase
     FN([Send Fault Notification]):::usecase
@@ -59,7 +62,7 @@ flowchart TD
 
   %% ==== Core flow ====
   M --> C --> L --> W
-  G --> V
+  
 
   %% Logging (always executed with core use cases) ≈ <<include>>
   L --> LOG
@@ -67,9 +70,8 @@ flowchart TD
   D --> LOG
 
   %% ==== Branching (labels explain conditions) ====
-  L -- "known plate" --> V
-  V -- "valid gesture" --> O
-  V -- "invalid gesture" --> D
+ 
+
   L -- "unknown plate" --> N
 
   %% ==== Notifications & decisions ====
@@ -81,6 +83,7 @@ flowchart TD
 
   %% ==== Management ====
   Owner --> WL
+  Owner --> BL
 
   %% ==== Fault handling (fail-safe: gate stays closed) ====
   FD --> FN --> Owner
