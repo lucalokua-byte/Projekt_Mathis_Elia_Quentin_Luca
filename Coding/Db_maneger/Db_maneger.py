@@ -32,16 +32,31 @@ class DBManager(AbstractDBManager):
         with open(self.filename, 'w', encoding='utf-8') as file: # 'w' mode for writing
             json.dump(self.license_plates, file, indent=4) # indent=4 for pretty printing
 
-    def add_license_plate(self, license_plate):
-
-        # Add a licrense plate to the database if it's not already present.
-        #Returns True if added, False if already exists.
-
+    def add_license_plate(self, license_plate, confidence=None, timestamp=None, metadata=None):
+        """
+        Add a license plate to the database with additional information.
+        Returns True if added, False if already exists.
+        """
         if not self.find(license_plate, verbose=False):
-            self.license_plates.append({'license_plate': license_plate})
+            plate_data = {
+                'license_plate': license_plate,
+                'timestamp': timestamp or time.time(),
+                'date_added': time.strftime('%Y-%m-%d %H:%M:%S')
+            }
+            
+            # Add optional fields if provided
+            if confidence is not None:
+                plate_data['confidence'] = confidence
+            if metadata:
+                plate_data.update(metadata)
+                
+            self.license_plates.append(plate_data)
             self.save_data()
+            print(f"✅ License plate '{license_plate}' added to database.")
             return True
-        return False
+        else:
+            print(f"⚠️ License plate '{license_plate}' already exists in database.")
+            return False
     
     def remove_license_plate(self, license_plate):
 

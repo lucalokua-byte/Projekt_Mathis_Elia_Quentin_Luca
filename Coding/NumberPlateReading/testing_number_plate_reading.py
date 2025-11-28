@@ -293,10 +293,11 @@ class NumberPlateRecognition(NumberPlateRecognizer):
             del self.confirmed_plates[plate_text]
     
     def display_final_result(self):
-        """Finales bestätigtes Nummernschild-Resultat anzeigen"""
+        """Finales bestätigtes Nummernschild-Resultat anzeigen und in DB speichern"""
         if self.final_confirmed_plate:
             plate_text = self.final_confirmed_plate['text']
             confidence = self.final_confirmed_plate['confidence']
+            timestamp = self.final_confirmed_plate.get('timestamp', time.time())
             
             print("\n" + "="*50)
             print("🚗 NUMBERSCHILD ERKANNT UND BESTÄTIGT!")
@@ -305,6 +306,22 @@ class NumberPlateRecognition(NumberPlateRecognizer):
             print(f"Confidence: {confidence:.1%}")
             print(f"Zeitstempel: {time.strftime('%Y-%m-%d %H:%M:%S')}")
             print("="*50)
+            
+            # In Datenbank speichern
+            try:
+                from Db_maneger.Db_maneger import DBManager
+                db_manager = DBManager("data", "license_plates.json")
+                success = db_manager.add_license_plate(
+                    license_plate=plate_text,
+                    confidence=confidence,
+                    timestamp=timestamp
+                )
+                if success:
+                    print("💾 Nummernschild erfolgreich in Datenbank gespeichert!")
+                else:
+                    print("⚠️ Nummernschild bereits in Datenbank vorhanden")
+            except Exception as e:
+                print(f"❌ Fehler beim Speichern in Datenbank: {e}")
     
     def run(self):
         """Hauptausführungsmethode"""
