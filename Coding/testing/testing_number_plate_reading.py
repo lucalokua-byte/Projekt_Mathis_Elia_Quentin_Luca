@@ -4,6 +4,7 @@ import os
 import re
 import time
 
+
 class NumberPlateRecognizer:
     def __init__(self, confidence_threshold=0.7, min_plate_length=4, max_plate_length=10):
         self.current_dir = os.path.dirname(os.path.abspath(__file__))
