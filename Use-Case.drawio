@@ -1,0 +1,22 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" version="28.2.9">
+  <diagram name="Seite-1" id="k8KMMmNGWNL2C-gMEtlA">
+    <mxGraphModel dx="1042" dy="658" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="awvGxNELSWszqD85ob43-1" value="Programm Actor&amp;nbsp;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="1">
+          <mxGeometry x="450" y="50" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="awvGxNELSWszqD85ob43-8" value="Ref" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;recursiveResize=0;container=1;collapsible=0;width=50;" vertex="1" parent="1">
+          <mxGeometry x="240" y="190" width="490" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="awvGxNELSWszqD85ob43-10" value="Recognize Auto&amp;nbsp;" style="ellipse;html=1;whiteSpace=wrap;" vertex="1" parent="awvGxNELSWszqD85ob43-8">
+          <mxGeometry x="40" y="40" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="awvGxNELSWszqD85ob43-11" value="Recognize Number Plate&amp;nbsp;" style="ellipse;html=1;whiteSpace=wrap;" vertex="1" parent="awvGxNELSWszqD85ob43-8">
+          <mxGeometry x="174" y="26.25" width="146" height="67.5" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
