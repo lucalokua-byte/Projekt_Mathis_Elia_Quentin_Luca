@@ -14,11 +14,6 @@ class NumberPlateRecognizer(ABC):
         pass
     
     @abstractmethod
-    def load_haar_cascade(self) -> bool:
-        """Haar Cascade Classifier laden"""
-        pass
-    
-    @abstractmethod
     def process_frame(self, frame):
         """Einzelnen Frame verarbeiten"""
         pass
