@@ -81,4 +81,6 @@ class CarDetectionApp:
             except Exception as e:
                 print(f"Error: {e}")
                 self.stop()
+
+        
     

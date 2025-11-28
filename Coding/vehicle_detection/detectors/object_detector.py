@@ -12,7 +12,7 @@ class ObjectDetector:
     Handles AI model loading and object detection using MediaPipe
     """
     
-    def __init__(self, model_path='efficientdet_lite0.tflite', score_threshold=0.2):
+    def __init__(self, model_path='models\efficientdet_lite0.tflite', score_threshold=0.2):
         self.model_path = model_path
         self.score_threshold = score_threshold
         self.detector = None
