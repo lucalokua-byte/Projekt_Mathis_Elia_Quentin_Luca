@@ -66,8 +66,7 @@ class UnknownPlateHandler:
         """
         if decision == 'ALLOW':
             print(f"Access GRANTED for license plate: {plate_number}")
-            print(f"The portal is oppening")
-
+            print(f"The portal is opening")
             return True
         else:  # DENY or any other value
             print(f"Access DENIED for license plate: {plate_number}")
@@ -81,25 +80,8 @@ if __name__ == "__main__":
     
     handler = UnknownPlateHandler()
     
-    # Test with an unknown license plate
+    # Test avec une plaque fixe
     test_plate = "AB-123-CD"
     result = handler.handle_unknown_plate(test_plate)
     
     print(f"\n Final result: Access {'GRANTED' if result else 'DENIED'}")
-2
-"""
-# Programm to put in the main
-
-from unknown_plate_handler import UnknownPlateHandler
-
-# When you detect an unknown license plate
-if not known_plate:
-    handler = UnknownPlateHandler()
-    access_granted = handler.handle_unknown_plate("UNKNOWN-PLATE")
-    
-    if access_granted:
-        open_gate()
-    else:
-        keep_gate_closed()
-
-"""

@@ -7,7 +7,7 @@ import os
 # Add the parent directory to the path to import the module
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from Numberplate_validation import UnknownPlateHandler
+from Coding.Numberplate_validation import UnknownPlateHandler
 
 class TestUnknownPlateHandler(unittest.TestCase):
     """
