@@ -1,4 +1,4 @@
-# Sprint 0: Projekt Software Engineering
+# Readme: Projekt Software Engineering
 
 **Einleitung**
 Im Rahmen des Moduls Software Engineering entwickeln wir ein intelligentes Sicherheitssystem zur automatischen Erkennung von Fahrzeugkennzeichen und Steuerung eines Tores. Wird ein bekanntes Kennzeichen erkannt, öffnet sich das Tor nur nach dem richtigen Handsignal. Bei unbekannten Kennzeichen wird der Eigentümer über eine App benachrichtigt und kann den Zutritt erlauben oder verweigern.
