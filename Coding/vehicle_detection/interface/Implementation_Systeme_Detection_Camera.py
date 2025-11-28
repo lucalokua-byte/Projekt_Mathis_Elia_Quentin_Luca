@@ -20,10 +20,9 @@ class CameraVehicleDetectionSystem(VehicleDetectionSystemInterface):
         self.running = False
         self.vehicle_detection_start_time = None
         self.threshold = None
-        self.detection_vehicles = "all_vehicles"
+        self.detection_mode = None
         self.session_start_time = time.time()
         self.vehicles_detected = 0
-        self.false_positives = 0
     
     def configure_detection_vehicles(self, vehicles: str):
         valid_vehicles = {
@@ -104,10 +103,8 @@ class CameraVehicleDetectionSystem(VehicleDetectionSystemInterface):
         return {
             "session_duration": session_duration,
             "vehicles_detected": self.vehicles_detected,
-            "false_positives": self.false_positives,
             "detection_mode": self.detection_mode,
             "alert_threshold": self.threshold,
-            "success_rate": self.vehicles_detected / max(1, self.vehicles_detected + self.false_positives),
             "end_timestamp": time.strftime("%Y-%m-%d %H:%M:%S")
         }
     
@@ -123,15 +120,9 @@ class CameraVehicleDetectionSystem(VehicleDetectionSystemInterface):
             # Display information
             print(f" Session duration: {time.time() - self.session_start_time:.1f} seconds")
             print(f" Vehicles detected: {self.vehicles_detected}")
-            print(f" False positives: {self.false_positives}")
             print(f" Detection mode: {self.detection_mode}")
             print(f" Alert threshold: {self.threshold} seconds")
-            print(f" Success rate: {(self.vehicles_detected / max(1, self.vehicles_detected + self.false_positives)) * 100:.1f}%")
             print(f" Report generated at: {time.strftime('%Y-%m-%d %H:%M:%S')}")
-            
-            # Calculate detection rate per minute
-            vehicles_per_minute = (report['vehicles_detected'] / report['session_duration']) * 60
-            print(f"Detection rate: {vehicles_per_minute:.1f} vehicles/minute")
             
             print("=" * 50)
             print("Press any key to continue detection...")
