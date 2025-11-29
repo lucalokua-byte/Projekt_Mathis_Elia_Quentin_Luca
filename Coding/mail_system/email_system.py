@@ -280,9 +280,29 @@ class EmailSender:
             'reject_blacklist': 'REJECT + BLACKLIST',
             'reject_only': 'REJECT ONLY'
         }
+        decision = self.decision
+        plate = self.current_plate
         
         print(f"Email system completed - Decision: {decision_text.get(self.decision, self.decision)}")
         
+        # --- ACT on decision ---
+        if decision == "accept_whitelist":
+            self.db.whitelist_plate(plate)
+            self.db.add_license_plate(plate, confidence=100)
+
+        elif decision == "accept_only":
+            self.db.add_license_plate(plate, confidence=100)
+
+        elif decision == "reject_blacklist":
+            self.db.blacklist_plate(plate)
+            self.db.add_license_plate(plate, confidence=100)
+
+        elif decision == "reject_only":
+            # Just log as a visitor (already handled by add_license_plate)
+            self.db.add_license_plate(plate, confidence=100)
+
+        else:
+            print("Unknown decision. No action taken.")
         # Shutdown the HTTP server if it's running
         if self.server:
             self.server.shutdown()
