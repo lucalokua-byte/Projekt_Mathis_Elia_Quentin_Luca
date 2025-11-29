@@ -24,13 +24,8 @@ class NumberPlateRecognizer(ABC):
         pass
     
     @abstractmethod
-    def run(self):
+    def begin_plate_detection(self):
         """Hauptausführungsmethode"""
-        pass
-    
-    @abstractmethod
-    def cleanup(self):
-        """Ressourcen freigeben"""
         pass
     
     @abstractmethod
