@@ -9,7 +9,7 @@ from utils import PlateLogger, draw_detection_results
 from Db_maneger.AbstractDBManager import AbstractDBManager
 from Db_maneger.Db_maneger import DBManager
 from vehicle_detection.app import CarDetectionApp
-from NumberPlateReading.testing_number_plate_reading import NumberPlateRecognition 
+from Coding.NumberPlateReading.NumberPlateRecognition import NumberPlateRecognition 
 from NumberPlateReading.NumberPlateRecognitionInterface import NumberPlateRecognizer 
 from mail_system.email_system import EmailSender 
 
