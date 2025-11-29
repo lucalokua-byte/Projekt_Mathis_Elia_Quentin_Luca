@@ -11,7 +11,7 @@ from contextlib import redirect_stdout
 import base64
 
 # Import the class to test
-from Coding.mail_system.email_system import EmailSender
+from email_system import EmailSender
 
 class TestEmailSender(unittest.TestCase):
     """

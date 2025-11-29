@@ -25,6 +25,7 @@ class EmailSender:
         self.decision = None        # Stores the user's decision from email buttons
         self.current_plate = None   # Stores the currently detected license plate
         self.server = None          # Reference to the HTTP server instance
+        self._should_exit = False   # New flag to control exit behavior
 
     def send_vehicle_alert(self, plate_number: str):
         """
@@ -209,7 +210,7 @@ class EmailSender:
                     <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
                         <h1 style="color: #333;">{title}</h1>
                         <p style="font-size: 18px; color: #666;">{message}</p>
-                        <p style="color: #999; margin-top: 30px;">Program will terminate automatically</p>
+                        <p style="color: #999; margin-top: 30px;">Email system completed - Main program continues</p>
                     </body>
                     </html>
                     """
@@ -217,8 +218,8 @@ class EmailSender:
                     self.send_header('Content-type', 'text/html; charset=utf-8')
                     self.end_headers()
                     self.wfile.write(html.encode('utf-8'))
-                    # Start program shutdown in separate thread to avoid blocking
-                    threading.Thread(target=self.sender.stop_program).start()
+                    # Start cleanup in separate thread to avoid blocking
+                    threading.Thread(target=self.sender.cleanup_system).start()
                 
                 def _send_homepage(self):
                     """
@@ -262,9 +263,9 @@ class EmailSender:
             print(f"Server error: {e}")
             return False
 
-    def stop_program(self):
+    def cleanup_system(self):
         """
-        Gracefully shutdown the program after a decision has been made.
+        Clean up the email system after a decision has been made.
         This method is called when any of the 4 decision buttons is clicked.
         """
         # Brief delay to ensure the HTTP response is sent before shutdown
@@ -278,14 +279,14 @@ class EmailSender:
             'reject_only': 'REJECT ONLY'
         }
         
-        print(f"Program terminated - Decision: {decision_text.get(self.decision, self.decision)}")
+        print(f"Email system completed - Decision: {decision_text.get(self.decision, self.decision)}")
         
         # Shutdown the HTTP server if it's running
         if self.server:
             self.server.shutdown()
         
-        # Exit the program
-        sys.exit(0)
+        # Set flag to indicate system should exit (but don't call sys.exit)
+        self._should_exit = True
 
     def wait_for_decision(self, timeout=120):
         """
@@ -305,9 +306,50 @@ class EmailSender:
         while time.time() - start < timeout:
             if self.decision:
                 return self.decision
+            if self._should_exit:
+                return self.decision
             time.sleep(0.5)  # Check every 500ms
         
         return "timeout"
+
+    def run_email_system(self, plate_number: str):
+        """
+        Simplified method to run the complete email system.
+        
+        Args:
+            plate_number (str): The detected license plate number
+            
+        Returns:
+            str: The decision made by the user
+        """
+        print("SECURITY SYSTEM WITH 4 BUTTONS IN EMAIL")
+        print("=" * 60)
+        
+        # Step 1: Start the local HTTP server to handle button clicks
+        print("\n1. STARTING SERVER...")
+        if not self.start_local_server():
+            print("Cannot start server")
+            return "error"
+        
+        # Step 2: Send email with 4 decision buttons
+        print("\n2. SENDING EMAIL WITH 4 BUTTONS...")
+        if self.send_vehicle_alert(plate_number):
+            print("Email with 4 options sent! Check your mailbox")
+            
+            # Step 3: Wait for user to click a button in the email
+            decision = self.wait_for_decision(timeout=120)
+            
+            if decision == "timeout":
+                print("\nTIMEOUT - No action received")
+                # Cleanup server
+                if self.server:
+                    self.server.shutdown()
+                return "timeout"
+            else:
+                return decision
+                
+        print("Server stopped")
+        return "error"
 
 def main():
     """

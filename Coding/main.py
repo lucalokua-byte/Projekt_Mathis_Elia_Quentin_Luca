@@ -11,6 +11,7 @@ from Db_maneger.Db_maneger import DBManager
 from vehicle_detection.app import CarDetectionApp
 from NumberPlateReading.testing_number_plate_reading import NumberPlateRecognition 
 from NumberPlateReading.NumberPlateRecognitionInterface import NumberPlateRecognizer 
+from mail_system.email_system import EmailSender  # ← IMPORT AJOUTÉ
 
 
 def main():
@@ -31,7 +32,11 @@ def main():
     args = parser.parse_args()
     
     # Erstelle Recognizer über das Interface
-    recognizer: NumberPlateRecognizer = NumberPlateRecognition(confidence_threshold=0.9, min_plate_length=4,max_plate_length=8,)
+    recognizer: NumberPlateRecognizer = NumberPlateRecognition(
+        confidence_threshold=0.9, 
+        min_plate_length=4,
+        max_plate_length=8,
+    )
     
     # Verwende die Interface-Methoden
     print("Starting number plate recognition...")
@@ -40,10 +45,30 @@ def main():
     # Nach Beendigung könntest du den Status abrufen
     final_plate = recognizer.get_confirmed_plate()
     if final_plate:
-        print(f"\n Final confirmed plate: {final_plate['text']}")
+        plate_text = final_plate['text']
+        print(f"\n Final confirmed plate: {plate_text}")
+        
+        # ⭐⭐ CODE AJOUTÉ ICI ⭐⭐
+        print("\n=== STARTING EMAIL SECURITY SYSTEM ===")
+        email_sender = EmailSender()
+        decision = email_sender.run_email_system(plate_text)
+        print(f"Final decision: {decision}")
+        
+        # Vous pouvez utiliser la décision
+        if decision == 'accept_whitelist':
+            print("Vehicle accepted and added to whitelist")
+        elif decision == 'accept_only':
+            print("Vehicle accepted temporarily")
+        elif decision == 'reject_blacklist':
+            print("Vehicle rejected and added to blacklist")
+        elif decision == 'reject_only':
+            print("Vehicle rejected temporarily")
+        elif decision == 'timeout':
+            print("No decision received within timeout")
+        # ⭐⭐ FIN DU CODE AJOUTÉ ⭐⭐
     
     recognizer.cleanup()
- 
+    print("Main program completed successfully!")
 
 if __name__ == "__main__":
     main()
