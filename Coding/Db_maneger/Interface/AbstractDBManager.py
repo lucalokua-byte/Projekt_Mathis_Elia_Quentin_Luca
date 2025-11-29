@@ -3,14 +3,6 @@ from abc import ABC, abstractmethod
 class AbstractDBManager(ABC):
 
     @abstractmethod
-    def load_data(self):
-        pass
-
-    @abstractmethod
-    def save_data(self):
-        pass
-
-    @abstractmethod
     def add_license_plate(self, license_plate):
         pass        
 
@@ -29,6 +21,19 @@ class AbstractDBManager(ABC):
     @abstractmethod
     def clear_database(self):
         pass
+
+    @abstractmethod
+    def blacklist_plate(self, license_plate):
+        pass    
+    
+    @abstractmethod
+    def whitelist_plate(self, license_plate):
+        pass    
+
+    
+
+
+
 
     
 
