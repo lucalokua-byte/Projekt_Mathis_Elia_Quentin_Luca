@@ -4,9 +4,13 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime
 from http.server import HTTPServer, BaseHTTPRequestHandler
-from Db_maneger.Db_maneger import DBManager
-import time
 import sys
+import os
+import time
+
+# Add parent directory to path to import sibling modules
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from Db_maneger.Db_maneger import DBManager
 
 class EmailSender:
     """
@@ -14,7 +18,7 @@ class EmailSender:
     This system sends an email with 4 action buttons when an unknown vehicle is detected.
     """
     
-    def __init__(self, db_manager):
+    def __init__(self, db_manager: DBManager):
         """Initialize the EmailSender with Gmail configuration and state variables."""
         # Gmail SMTP configuration for sending emails
         self.gmail_config = {
@@ -27,7 +31,8 @@ class EmailSender:
         self.current_plate = None   # Stores the currently detected license plate
         self.server = None          # Reference to the HTTP server instance
         self._should_exit = False   # New flag to control exit behavior
-        self.db_manager = db_manager  # Reference to the database manager
+        self.db = db_manager       # Database manager instance for license plate management
+        
 
     def send_vehicle_alert(self, plate_number: str):
         """
@@ -164,7 +169,7 @@ class EmailSender:
                 """
                 sender = None  # Reference to the parent EmailSender instance
                 
-                def do_GET(self):
+                def do_GET(self,):
                     """
                     Handle GET requests from email button clicks.
                     Routes correspond to the 4 decision options in the email.
@@ -267,48 +272,47 @@ class EmailSender:
 
     def cleanup_system(self):
         """
-        Clean up the email system after a decision has been made.
-        This method is called when any of the 4 decision buttons is clicked.
+        Clean up after a decision has been made by processing it and shutting down.
         """
-        # Brief delay to ensure the HTTP response is sent before shutdown
-        time.sleep(1)
-        
-        # Map decision codes to human-readable text
+        time.sleep(1)  # Allow HTTP response to finish
+
         decision_text = {
             'accept_whitelist': 'ACCEPT + WHITELIST',
-            'accept_only': 'ACCEPT ONLY', 
+            'accept_only': 'ACCEPT ONLY',
             'reject_blacklist': 'REJECT + BLACKLIST',
             'reject_only': 'REJECT ONLY'
         }
+
         decision = self.decision
         plate = self.current_plate
-        
-        print(f"Email system completed - Decision: {decision_text.get(self.decision, self.decision)}")
-        
-        # --- ACT on decision ---
+
+        print(f"Email system completed - Decision: {decision_text.get(decision, decision)}")
+
+        # Act based on decision
         if decision == "accept_whitelist":
-            self.db.whitelist_plate(plate)
-            self.db.add_license_plate(plate, confidence=100)
+            self.db.whitelist_plate(plate)  # Add to whitelist
 
         elif decision == "accept_only":
             self.db.add_license_plate(plate, confidence=100)
 
         elif decision == "reject_blacklist":
             self.db.blacklist_plate(plate)
-            self.db.add_license_plate(plate, confidence=100)
 
         elif decision == "reject_only":
-            # Just log as a visitor (already handled by add_license_plate)
-            self.db.add_license_plate(plate, confidence=100)
-
+            # Do not add the plate as accepted; simply reject without recording
+            pass
         else:
             print("Unknown decision. No action taken.")
-        # Shutdown the HTTP server if it's running
+
+        # Save all changes
+        self.db.save_data()
+
+        # Shut down HTTP server if still running
         if self.server:
             self.server.shutdown()
-        
-        # Set flag to indicate system should exit (but don't call sys.exit)
+
         self._should_exit = True
+
 
     def wait_for_decision(self, timeout=120):
         """
