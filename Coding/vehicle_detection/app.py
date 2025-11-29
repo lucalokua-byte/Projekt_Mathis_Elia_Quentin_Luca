@@ -37,8 +37,9 @@ class CarDetectionApp:
         
         # Configure detection for standard vehicles with 2-second alert threshold
         self.system.configure_detection_vehicles(self.detection_mode)
-        self.system.set_stop_programme(self.threshold)
+        self.system.set_duration_threshold(self.threshold)
         
+
         # Initialize camera and detection components
         if not self.system.initialize_components():
             return
@@ -63,14 +64,8 @@ class CarDetectionApp:
                     self.system.execute_alert_actions(self.threshold)
                     break
                 
-                # Add detection timer and FPS overlay to frame
-                frame_with_ui = self.system._add_overlays(
-                    results["processed_image"], 
-                    results["detection_duration"]
-                )
-                
                 # Display the processed frame
-                cv2.imshow('Vehicle Detection', frame_with_ui)
+                cv2.imshow('Vehicle Detection', results["processed_image"])
                 
                 # Handle keyboard input
                 key = cv2.waitKey(1) & 0xFF

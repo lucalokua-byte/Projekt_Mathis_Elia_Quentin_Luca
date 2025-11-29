@@ -1,13 +1,21 @@
 import cv2
 
+
 class DetectionProcessor:
     """
     DETECTION PROCESSOR
     Processes object detection results and draws visual annotations
     """
     
-    def __init__(self):
-        self.vehicle_keywords = ['car', 'truck', 'bus', 'vehicle']
+    def __init__(self, detection_mode):
+        if detection_mode == "cars_only":
+            self.vehicle_keywords = ['car']
+        elif detection_mode == "standard_vehicles":
+            self.vehicle_keywords = ['car', 'truck', 'bus']
+        elif detection_mode == "all_vehicles":
+            self.vehicle_keywords = ['car', 'truck', 'bus', 'motorcycle']
+        # else:
+        #     raise ValueError(f"Invalid detection mode: {detection_mode}")
     
     def is_vehicle(self, category_name):
         """Check if the detected object is a vehicle"""

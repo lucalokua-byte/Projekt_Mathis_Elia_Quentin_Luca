@@ -28,10 +28,10 @@ class TestCameraVehicleDetectionSystem(unittest.TestCase):
         self.assertTrue("Invalid vehicles" in str(context.exception))
     
     def test_set_stop_programme(self):
-        self.system.set_stop_programme(2.5)
+        self.system.set_duration_threshold(2.5)
         self.assertEqual(self.system.threshold, 2.5)
         
-        self.system.set_stop_programme(1.0)
+        self.system.set_duration_threshold(1.0)
         self.assertEqual(self.system.threshold, 1.0)
     
     def test_generate_report_structure(self):
