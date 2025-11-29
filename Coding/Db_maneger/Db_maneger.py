@@ -1,7 +1,7 @@
 import json
 import os
+import time 
 
-from datetime import datetime
 from Interface.AbstractDBManager import AbstractDBManager
 class DBManager(AbstractDBManager):#Dbmanager_Json
 
@@ -90,12 +90,17 @@ class DBManager(AbstractDBManager):#Dbmanager_Json
         with open(self.filename, 'w', encoding='utf-8') as file: # 'w' mode for writing
             json.dump(data, file, indent=4) # indent=4 for pretty printing
 
-    def add_license_plate(self, license_plate):
+    def add_license_plate(self, license_plate, confidence= None):
+      
         # Record entry with timestamp
         entry = {
                     'license_plate': license_plate,
-                    'timestamp': datetime.now().isoformat()
+                    'date_added':time.strftime('%Y-%m-%d %H:%M:%S'),
+                    'confidence': confidence
                     }
+         #confidence lvl is optional parameter
+        if confidence is not None:
+         entry['confidence'] = confidence
         
         # Check blacklist and whitelist before adding
         if license_plate in self.blacklisted_plates:
@@ -192,7 +197,7 @@ if __name__ == "__main__":
     db_manager.blacklist_plate("GHI789")
 
     # Try adding different plates
-    db_manager.add_license_plate("ABC123")  # Whitelisted – should succeed
+    db_manager.add_license_plate("ABC123",confidence=90.2)  # Whitelisted – should succeed
     db_manager.add_license_plate("DEF456")  # Blacklisted – should fail
     db_manager.add_license_plate("LMN456")  # Not whitelisted – should fail if is whitelist enforced-> True
  
