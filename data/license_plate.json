@@ -1,0 +1,13 @@
+{
+    "visitors": [
+        {
+            "license_plate": "KY75",
+            "date_added": "2025-11-29 15:11:50",
+            "confidence": 0.92
+        }
+    ],
+    "whitelist_log": [],
+    "blacklist_log": [],
+    "Whitelisted_plates": [],
+    "Blacklisted_plates": []
+}

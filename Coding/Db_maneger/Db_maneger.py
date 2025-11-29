@@ -2,7 +2,7 @@ import json
 import os
 import time 
 
-from Interface.AbstractDBManager import AbstractDBManager
+from Db_maneger.AbstractDBManager import AbstractDBManager
 class DBManager(AbstractDBManager):#Dbmanager_Json
 
     def __init__(self,folder,filename):
@@ -136,16 +136,16 @@ class DBManager(AbstractDBManager):#Dbmanager_Json
         #Remove a license plate from the database if it exists.
         #Returns True if removed, False if not found.
 
-        for record in self.license_plates:
+        for record in self.visitor_log:
             if record['license_plate'] == license_plate:
-                self.license_plates.remove(record)
+                self.visitor_log.remove(record)
                 self.save_data()
                 return True
         return False
     
    
     def find(self, license_plate, verbose=True):
-     for record in self.license_plates:
+     for record in self.visitor_log:
         if record['license_plate'] == license_plate:
             if verbose: # added parameter to control verbosity(verbosity is added)
              print(f"License plate '{license_plate}' found in database.")
@@ -157,11 +157,11 @@ class DBManager(AbstractDBManager):#Dbmanager_Json
     
     def list_all(self):
         #Return a list of all license plates in the database.
-        return self.license_plates
+        return self.visitor_log
     
     def clear_database(self):
         #Clear all license plates from the database.
-        self.license_plates = []
+        self.visitor_log = []
         self.save_data()
 
     def blacklist_plate(self, license_plate):

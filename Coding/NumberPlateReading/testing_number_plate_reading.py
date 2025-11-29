@@ -310,11 +310,10 @@ class NumberPlateRecognition(NumberPlateRecognizer):
             # In Datenbank speichern
             try:
                 from Db_maneger.Db_maneger import DBManager
-                db_manager = DBManager("data", "license_plates.json")
+                db_manager = DBManager("data", "license_plate.json")
                 success = db_manager.add_license_plate(
                     license_plate=plate_text,
                     confidence=confidence,
-                    timestamp=timestamp
                 )
                 if success:
                     print("💾 Nummernschild erfolgreich in Datenbank gespeichert!")
