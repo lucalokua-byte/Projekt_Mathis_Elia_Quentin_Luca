@@ -2,7 +2,7 @@ import json
 import os
 import time 
 
-from Db_maneger.AbstractDBManager import AbstractDBManager
+from Db_maneger.Interface.AbstractDBManager import AbstractDBManager
 class DBManager(AbstractDBManager):#Dbmanager_Json
 
     def __init__(self,folder,filename):
