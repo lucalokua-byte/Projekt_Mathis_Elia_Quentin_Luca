@@ -50,7 +50,7 @@ def main():
         
         # Email security system integration
         print("\n=== STARTING EMAIL SECURITY SYSTEM ===")
-        email_sender = EmailSender()
+        email_sender = EmailSender(db_manager=DBManager("data", "license_plates.json"))
         decision = email_sender.run_email_system(plate_text)
         print(f"Final decision: {decision}")
         
