@@ -4,6 +4,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime
 from http.server import HTTPServer, BaseHTTPRequestHandler
+from Db_maneger.Db_maneger import DBManager
 import time
 import sys
 
@@ -13,7 +14,7 @@ class EmailSender:
     This system sends an email with 4 action buttons when an unknown vehicle is detected.
     """
     
-    def __init__(self):
+    def __init__(self, db_manager):
         """Initialize the EmailSender with Gmail configuration and state variables."""
         # Gmail SMTP configuration for sending emails
         self.gmail_config = {
@@ -26,6 +27,7 @@ class EmailSender:
         self.current_plate = None   # Stores the currently detected license plate
         self.server = None          # Reference to the HTTP server instance
         self._should_exit = False   # New flag to control exit behavior
+        self.db_manager = db_manager  # Reference to the database manager
 
     def send_vehicle_alert(self, plate_number: str):
         """
@@ -358,9 +360,10 @@ def main():
     """
     print("SECURITY SYSTEM WITH 4 BUTTONS IN EMAIL")
     print("=" * 60)
-    
+    # Create the database manager instance
+    db_manager = DBManager("data", "licence_plates.json")
     # Create the main EmailSender instance
-    sender = EmailSender()
+    sender = EmailSender(db_manager)
     
     # Step 1: Start the local HTTP server to handle button clicks
     print("\n1. STARTING SERVER...")
