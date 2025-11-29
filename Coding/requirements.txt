@@ -1,8 +1,0 @@
-opencv-python
-pytesseract
-numpy
-imutils
-pillow
-requests
-mediapipe
-#https://github.com/UB-Mannheim/tesseract/wiki

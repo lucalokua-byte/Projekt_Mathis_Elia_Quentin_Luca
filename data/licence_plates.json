@@ -11,6 +11,15 @@
         {
             "license_plate": "LMN456",
             "timestamp": "2025-11-29T13:47:35.891155"
+        },
+        {
+            "license_plate": "LMN456",
+            "date_added": "2025-11-29 14:07:24"
+        },
+        {
+            "license_plate": "LMN456",
+            "date_added": "2025-11-29 14:27:19",
+            "confidence": null
         }
     ],
     "whitelist_log": [
@@ -25,6 +34,15 @@
         {
             "license_plate": "ABC123",
             "timestamp": "2025-11-29T13:47:35.884202"
+        },
+        {
+            "license_plate": "ABC123",
+            "date_added": "2025-11-29 14:07:24"
+        },
+        {
+            "license_plate": "ABC123",
+            "date_added": "2025-11-29 14:27:19",
+            "confidence": 90.2
         }
     ],
     "blacklist_log": [
@@ -39,6 +57,15 @@
         {
             "license_plate": "DEF456",
             "timestamp": "2025-11-29T13:47:35.884322"
+        },
+        {
+            "license_plate": "DEF456",
+            "date_added": "2025-11-29 14:07:24"
+        },
+        {
+            "license_plate": "DEF456",
+            "date_added": "2025-11-29 14:27:19",
+            "confidence": null
         }
     ],
     "Whitelisted_plates": [

@@ -1,0 +1,9 @@
+opencv-python
+pytesseract
+numpy
+imutils
+pillow
+requests
+mediapipe
+#https://github.com/UB-Mannheim/tesseract/wi
+pip install secure-smtplib email-validator
