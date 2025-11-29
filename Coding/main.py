@@ -40,7 +40,7 @@ def main():
     
     # Use the interface methods
     print("Starting number plate recognition...")
-    recognizer.run()
+    recognizer.begin_plate_detection()
     
     # After completion, retrieve the status
     final_plate = recognizer.get_confirmed_plate()
@@ -68,7 +68,7 @@ def main():
         
     
     # Clean up resources
-    recognizer.cleanup()
+    recognizer.close_camera_window()
     print("Main program completed successfully!")
 
 

@@ -310,11 +310,10 @@ class NumberPlateRecognition(NumberPlateRecognizer):
             # In Datenbank speichern
             try:
                 from Db_maneger.Db_maneger import DBManager
-                db_manager = DBManager("data", "license_plates.json")
+                db_manager = DBManager("data", "license_plate.json")
                 success = db_manager.add_license_plate(
                     license_plate=plate_text,
                     confidence=confidence,
-                    timestamp=timestamp
                 )
                 if success:
                     print("💾 Nummernschild erfolgreich in Datenbank gespeichert!")
@@ -323,7 +322,7 @@ class NumberPlateRecognition(NumberPlateRecognizer):
             except Exception as e:
                 print(f"❌ Fehler beim Speichern in Datenbank: {e}")
     
-    def run(self):
+    def begin_plate_detection(self):
         """Hauptausführungsmethode"""
         if not self.initialize_camera():
             return
@@ -384,9 +383,9 @@ class NumberPlateRecognition(NumberPlateRecognizer):
         finally:
             # Zeige das endgültige Ergebnis an
             self.display_final_result()
-            self.cleanup()
+            self.close_camera_window()
     
-    def cleanup(self):
+    def close_camera_window(self):
         """Ressourcen freigeben"""
         if self.cap:
             self.cap.release()
