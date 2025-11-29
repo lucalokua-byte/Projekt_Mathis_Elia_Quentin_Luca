@@ -11,11 +11,11 @@ from Db_maneger.Db_maneger import DBManager
 from vehicle_detection.app import CarDetectionApp
 from NumberPlateReading.testing_number_plate_reading import NumberPlateRecognition 
 from NumberPlateReading.NumberPlateRecognitionInterface import NumberPlateRecognizer 
-from mail_system.email_system import EmailSender  # ← IMPORT AJOUTÉ
+from mail_system.email_system import EmailSender 
 
 
 def main():
-    """Unified main function"""
+    """Unified main function for the intelligent detection system"""
     print("=== INTELLIGENT DETECTION SYSTEM ===")
 
     # Start vehicle detection
@@ -31,30 +31,30 @@ def main():
     
     args = parser.parse_args()
     
-    # Erstelle Recognizer über das Interface
+    # Create recognizer using the interface
     recognizer: NumberPlateRecognizer = NumberPlateRecognition(
         confidence_threshold=0.9, 
         min_plate_length=4,
         max_plate_length=8,
     )
     
-    # Verwende die Interface-Methoden
+    # Use the interface methods
     print("Starting number plate recognition...")
     recognizer.run()
     
-    # Nach Beendigung könntest du den Status abrufen
+    # After completion, retrieve the status
     final_plate = recognizer.get_confirmed_plate()
     if final_plate:
         plate_text = final_plate['text']
-        print(f"\n Final confirmed plate: {plate_text}")
+        print(f"\nFinal confirmed plate: {plate_text}")
         
-        # ⭐⭐ CODE AJOUTÉ ICI ⭐⭐
+        # Email security system integration
         print("\n=== STARTING EMAIL SECURITY SYSTEM ===")
         email_sender = EmailSender()
         decision = email_sender.run_email_system(plate_text)
         print(f"Final decision: {decision}")
         
-        # Vous pouvez utiliser la décision
+        # Process the decision
         if decision == 'accept_whitelist':
             print("Vehicle accepted and added to whitelist")
         elif decision == 'accept_only':
@@ -64,11 +64,13 @@ def main():
         elif decision == 'reject_only':
             print("Vehicle rejected temporarily")
         elif decision == 'timeout':
-            print("No decision received within timeout")
-        # ⭐⭐ FIN DU CODE AJOUTÉ ⭐⭐
+            print("No decision received within timeout period")
+        
     
+    # Clean up resources
     recognizer.cleanup()
     print("Main program completed successfully!")
+
 
 if __name__ == "__main__":
     main()
