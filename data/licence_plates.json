@@ -1,0 +1,52 @@
+{
+    "visitors": [
+        {
+            "license_plate": "LMN456",
+            "timestamp": "2025-11-29T13:46:47.414134"
+        },
+        {
+            "license_plate": "LMN456",
+            "timestamp": "2025-11-29T13:46:56.166999"
+        },
+        {
+            "license_plate": "LMN456",
+            "timestamp": "2025-11-29T13:47:35.891155"
+        }
+    ],
+    "whitelist_log": [
+        {
+            "license_plate": "ABC123",
+            "timestamp": "2025-11-29T13:46:47.398463"
+        },
+        {
+            "license_plate": "ABC123",
+            "timestamp": "2025-11-29T13:46:56.160653"
+        },
+        {
+            "license_plate": "ABC123",
+            "timestamp": "2025-11-29T13:47:35.884202"
+        }
+    ],
+    "blacklist_log": [
+        {
+            "license_plate": "DEF456",
+            "timestamp": "2025-11-29T13:46:47.398674"
+        },
+        {
+            "license_plate": "DEF456",
+            "timestamp": "2025-11-29T13:46:56.160769"
+        },
+        {
+            "license_plate": "DEF456",
+            "timestamp": "2025-11-29T13:47:35.884322"
+        }
+    ],
+    "Whitelisted_plates": [
+        "XYZ789",
+        "ABC123"
+    ],
+    "Blacklisted_plates": [
+        "GHI789",
+        "DEF456"
+    ]
+}
