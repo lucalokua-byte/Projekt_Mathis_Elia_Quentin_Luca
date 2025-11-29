@@ -20,10 +20,21 @@ class CameraVehicleDetectionSystem(VehicleDetectionSystemInterface):
         self.running = False
         self.vehicle_detection_start_time = None
         self.threshold = None
-        self.detection_mode = None
-        self.session_start_time = time.time()
-        self.vehicles_detected = 0
-    
+        self.detection_mode = None     
+
+    def initialize_components(self) -> bool:
+        try:
+            print(" Initializing components...")
+            self.detector = ObjectDetector()
+            self.camera = Camera()
+            self.processor = DetectionProcessor(detection_mode=self.detection_mode)
+            self.session_start_time = time.time()
+            print(" Detection system initialized!")
+            return True
+        except Exception as e:
+            print(f" Initialization error: {e}")
+            return False
+        
     def configure_detection_vehicles(self, vehicles: str):
         valid_vehicles = {
             "cars_only": ["car", "vehicle"],
@@ -37,22 +48,9 @@ class CameraVehicleDetectionSystem(VehicleDetectionSystemInterface):
         else:
             raise ValueError(f"Invalid vehicles: {vehicles}")
     
-    def set_stop_programme(self, duration_seconds: float):
+    def set_duration_threshold(self, duration_seconds: float):
         self.threshold = duration_seconds
-        print(f" Alert threshold configured: {duration_seconds}s")
-    
-    def initialize_components(self) -> bool:
-        try:
-            print(" Initializing components...")
-            self.detector = ObjectDetector()
-            self.camera = Camera()
-            self.processor = DetectionProcessor()
-            self.session_start_time = time.time()
-            print(" Detection system initialized!")
-            return True
-        except Exception as e:
-            print(f" Initialization error: {e}")
-            return False
+        print(f" Threshold configured: {duration_seconds}s")
     
     def detect_and_analyze(self, frame) -> Dict[str, Any]:
         try:
@@ -94,7 +92,7 @@ class CameraVehicleDetectionSystem(VehicleDetectionSystemInterface):
     
     def execute_alert_actions(self, duration_seconds):
         print(f" ALERT: Vehicle detected for more than {duration_seconds} seconds!")
-        print(" Stopping detection system...")
+        print(" Stopping Vehicle detection ...")
         self._stop_system()
     
     def generate_report(self) -> Dict[str, Any]:

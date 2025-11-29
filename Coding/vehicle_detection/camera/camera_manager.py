@@ -1,5 +1,5 @@
 import cv2
-import time
+
 
 class Camera:
     """
@@ -11,7 +11,6 @@ class Camera:
         self.camera_index = camera_index
         self.cap = None
         self.frame_count = 0
-        self.start_time = time.time()
         self._initialize_camera()
     
     def _initialize_camera(self):
@@ -32,10 +31,6 @@ class Camera:
     def get_timestamp(self):
         """Get current video timestamp in milliseconds"""
         return int(self.cap.get(cv2.CAP_PROP_POS_MSEC))
-    
-    def get_fps(self):
-        """Get current frames per second"""
-        return self.cap.get(cv2.CAP_PROP_FPS)
     
     def release(self):
         """Release camera resources and cleanup"""

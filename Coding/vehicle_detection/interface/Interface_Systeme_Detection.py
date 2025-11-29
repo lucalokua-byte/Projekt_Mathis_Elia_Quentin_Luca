@@ -9,12 +9,15 @@ class VehicleDetectionSystemInterface(ABC):
     
     @abstractmethod
     def configure_detection_vehicles(self, vehicles: str):
-        """Configure the type of vehicles to detect"""
+        """Configure the type of vehicles to detect
+                "cars_only": ["car", "vehicle"],
+                "standard_vehicles": ["car", "truck", "bus", "vehicle"],
+                "all_vehicles": ["car", "truck", "bus", "motorcycle", "vehicle"]"""
         pass
     
     @abstractmethod
-    def set_stop_programme(self, duration_seconds: float):
-        """When a vehicle is detected, how long does it take for the programme to stop automatically?"""
+    def set_duration_threshold(self, duration_seconds: float):
+        """Create a time check: if a car is detected for X seconds, then move to the next program."""
         pass
     
     @abstractmethod
