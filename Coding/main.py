@@ -9,13 +9,13 @@ from utils import PlateLogger, draw_detection_results
 from Db_maneger.AbstractDBManager import AbstractDBManager
 from Db_maneger.Db_maneger import DBManager
 from vehicle_detection.app import CarDetectionApp
-from number_plate_detection.NumberPlateDetection_Interface import NumberPlateDetection
-from number_plate_detection.NumberPlateRecognition import PlateRecognizer
-from number_plate_detection.number_plate_system import CompleteDetectionSystem
+from NumberPlateReading.testing_number_plate_reading import NumberPlateRecognition 
+from NumberPlateReading.NumberPlateRecognitionInterface import NumberPlateRecognizer 
+from mail_system.email_system import EmailSender 
 
 
 def main():
-    """Unified main function"""
+    """Unified main function for the intelligent detection system"""
     print("=== INTELLIGENT DETECTION SYSTEM ===")
 
     # Start vehicle detection
@@ -30,41 +30,47 @@ def main():
     parser.add_argument('--no-log', action='store_true', help='Disable logging')
     
     args = parser.parse_args()
- 
-    system = CompleteDetectionSystem(
-        camera_id=args.camera,
-        display=not args.no_display,
-        log_results=not args.no_log
+    
+    # Create recognizer using the interface
+    recognizer: NumberPlateRecognizer = NumberPlateRecognition(
+        confidence_threshold=0.9, 
+        min_plate_length=4,
+        max_plate_length=8,
     )
-    system.start_plate_recognition()
-    '''
-    """Programme principal qui intègre les deux systèmes"""
-    print("=== SYSTÈME COMPLET DE RECONNAISSANCE ===")
     
-    # Étape 1: Détecter une plaque avec le premier programme
-    print("\n1. 🔍 DÉTECTION DE PLAQUE...")
-    detected_plate = detect_plate_and_return()
+    # Use the interface methods
+    print("Starting number plate recognition...")
+    recognizer.run()
     
-    if not detected_plate:
-        print("❌ Aucune plaque détectée. Arrêt du système.")
-        return
+    # After completion, retrieve the status
+    final_plate = recognizer.get_confirmed_plate()
+    if final_plate:
+        plate_text = final_plate['text']
+        print(f"\nFinal confirmed plate: {plate_text}")
+        
+        # Email security system integration
+        print("\n=== STARTING EMAIL SECURITY SYSTEM ===")
+        email_sender = EmailSender()
+        decision = email_sender.run_email_system(plate_text)
+        print(f"Final decision: {decision}")
+        
+        # Process the decision
+        if decision == 'accept_whitelist':
+            print("Vehicle accepted and added to whitelist")
+        elif decision == 'accept_only':
+            print("Vehicle accepted temporarily")
+        elif decision == 'reject_blacklist':
+            print("Vehicle rejected and added to blacklist")
+        elif decision == 'reject_only':
+            print("Vehicle rejected temporarily")
+        elif decision == 'timeout':
+            print("No decision received within timeout period")
+        
     
-    print(f"\n✅ PLAQUE DÉTECTÉE: {detected_plate}")
-    
-    # Étape 2: Utiliser la plaque détectée dans Numberplate_validation.py
-    print("\n2. 🚨 TRAITEMENT DE LA PLAQUE INCONNUE...")
-    handler = UnknownPlateHandler()
-    access_granted = handler.handle_unknown_plate(detected_plate)  # <-- ICI on utilise la plaque détectée
-    
-    # Étape 3: Résultat final
-    print(f"\n3. 🎯 RÉSULTAT FINAL: Accès {'AUTORISÉ' if access_granted else 'REFUSÉ'}")
-    
-    if access_granted:
-        print("🚪 La porte s'ouvre...")
-        # Ajouter ici la logique pour ouvrir la porte
-    else:
-        print("🚪 La porte reste fermée...")
-        # Ajouter ici la logique pour garder la porte fermée
-    '''
+    # Clean up resources
+    recognizer.cleanup()
+    print("Main program completed successfully!")
+
+
 if __name__ == "__main__":
     main()
