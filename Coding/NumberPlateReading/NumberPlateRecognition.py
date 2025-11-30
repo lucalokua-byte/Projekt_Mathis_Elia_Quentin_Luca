@@ -330,9 +330,24 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
             try:
                 from mail_system.email_system import EmailSender
                 from Db_maneger.Db_maneger import DBManager
+                email_sender = EmailSender(db_manager)
 
                 db_manager = DBManager("data", "license_plate.json")
-                email_sender = EmailSender(db_manager)
+                if plate_text in db_manager.whitelisted_plates:
+                    print(f"Nummernschild {plate_text} ist in der Whitelist.")
+                    db_manager.add_license_plate(plate_text,confidence=100.0)
+                    return
+                
+                if db_manager.find(plate_text) and plate_text not in db_manager.blacklisted_plates and plate_text not in db_manager.whitelisted_plates:
+                    print(f"Numberplate {plate_text} found in database, requesting email system for decision...")
+                    email_sender.run_email_system(plate_text)
+                    return
+
+                if plate_text in db_manager.blacklisted_plates:
+                    print(f"Numberplate {plate_text} is in the blacklist, gate stays closed.")
+                    db_manager.add_license_plate(plate_text,confidence=100)
+                    return
+                
                 decision = email_sender.run_email_system(plate_text)
 
                 print(f"Entscheidung aus E-Mail-System: {decision}")
@@ -387,7 +402,8 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
                 
                 key = cv2.waitKey(1) & 0xFF
                 if key == ord('q'):
-                    print("\n⏹️  Manuell beendet durch Benutzer")
+                    print("\nManuell beendet durch Benutzer")
+                    self.should_exit = True
                     break
                 elif key == ord('r'):
                     self.confirmed_plates.clear()
