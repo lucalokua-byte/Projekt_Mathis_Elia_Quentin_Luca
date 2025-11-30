@@ -6,7 +6,7 @@ import os
 import json
 from Db_maneger.AbstractDBManager import AbstractDBManager
 from Db_maneger.Db_maneger import DBManager
-from vehicle_detection.app import CarDetectionApp
+from vehicle_detection.car_detection import CarDetectionApp
 from NumberPlateReading.NumberPlateRecognition import NumberPlateRecognition 
 from NumberPlateReading.NumberPlateRecognitionInterface import NumberPlateRecognizer 
 from mail_system.email_system import EmailSender 

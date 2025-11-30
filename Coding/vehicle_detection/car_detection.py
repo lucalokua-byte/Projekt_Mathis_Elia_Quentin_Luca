@@ -69,7 +69,6 @@ class CarDetectionApp:
                 
                 # Stop if vehicle detected for 2+ seconds
                 if results["threshold_reached"]:
-                    print(f" Vehicle detected for more than {self.threshold} seconds!")
                     print(" Stopping Vehicle detection ...")
                     self.stop()
                     break
