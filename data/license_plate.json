@@ -1,13 +1,8 @@
 {
     "visitors": [
         {
-            "license_plate": "KY75",
-            "date_added": "2025-11-29 15:11:50",
-            "confidence": 0.92
-        },
-        {
             "license_plate": "LE75CFG",
-            "date_added": "2025-11-29 15:25:56",
+            "date_added": "2025-11-30 16:22:14",
             "confidence": 0.935
         }
     ],
