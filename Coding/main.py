@@ -8,7 +8,7 @@ from camera_manager import CameraManager
 from utils import PlateLogger, draw_detection_results
 from Db_maneger.AbstractDBManager import AbstractDBManager
 from Db_maneger.Db_maneger import DBManager
-from vehicle_detection.app import CarDetectionApp
+from vehicle_detection.car_detection import CarDetectionApp
 from NumberPlateReading.NumberPlateRecognition import NumberPlateRecognition 
 from NumberPlateReading.NumberPlateRecognitionInterface import NumberPlateRecognizer 
 from mail_system.email_system import EmailSender 
@@ -20,8 +20,8 @@ def main():
 
     # Start vehicle detection
     print("  VEHICLE DETECTION SYSTEM")
-    app = CarDetectionApp()
-    app.run()
+    car_detection = CarDetectionApp()
+    car_detection.run()
 
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description='Intelligent Detection System')

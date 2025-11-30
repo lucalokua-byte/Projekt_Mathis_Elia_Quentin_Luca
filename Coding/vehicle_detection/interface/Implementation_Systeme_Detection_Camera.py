@@ -3,6 +3,9 @@ import mediapipe as mp
 import time
 from typing import Dict, Any
 from interface.Interface_Systeme_Detection import VehicleDetectionSystemInterface
+from vehicle_detection.detectors.object_detector import ObjectDetector
+from vehicle_detection.camera.camera_manager import Camera
+from vehicle_detection.detectors.detection_processor import DetectionProcessor
 
 class CameraVehicleDetectionSystem(VehicleDetectionSystemInterface):
     """
@@ -14,12 +17,14 @@ class CameraVehicleDetectionSystem(VehicleDetectionSystemInterface):
         self.detector = None
         self.camera = None
         self.processor = None
-        self.running = False
         self.vehicle_detection_start_time = None
         self.threshold = None
         self.detection_mode = None     
         self.vehicles_detected = 0
         self.session_start_time = None
+        self.detector = ObjectDetector()
+        self.camera = Camera()
+        self.processor = DetectionProcessor(detection_mode=self.detection_mode)
     
     def configure_detection_vehicles(self, vehicles: str):
         valid_vehicles = {
@@ -78,8 +83,7 @@ class CameraVehicleDetectionSystem(VehicleDetectionSystemInterface):
                 "detection_duration": detection_duration,
                 "threshold_reached": should_stop,
                 "processed_image": processed_frame,
-                "timestamp": time.time(),
-                "average_confidence": 0.85
+                "timestamp": current_time,
             }
             
         except Exception as e:
