@@ -5,13 +5,16 @@ import re
 import time
 from .NumberPlateRecognitionInterface import NumberPlateRecognizer
 
-class NumberPlateRecognition(NumberPlateRecognizer):
-    def __init__(self, confidence_threshold=0.9, min_plate_length=4, max_plate_length=8):
+class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognition takes from the NumberPlateRecognizer Interface, which means it will implement all its methods
+    """Implementation of Number Plate Recognition System"""
+    def __init__(self, confidence_threshold=0.9, min_plate_length=4, max_plate_length=8): # The class constructor with default values for confidence threshold and plate length
+        # These two lines set up the Haar Cascade file path for plate detection, that file is a pre-trained model for reading specifically Russian plates but works decently for others too
         self.current_dir = os.path.dirname(os.path.abspath(__file__))
-        self.harcascade = os.path.join(self.current_dir, "haarcascade_russian_plate_number.xml")
-        self.min_area = 500
-        self.cap = None
-        self.plate_detector = None
+        self.harcascade = os.path.join(self.current_dir, "haarcascade_russian_plate_number.xml") 
+
+        self.min_area = 500 # Minimal area in pixels for a detected plate to be considered valid
+        self.cap = None # Video capture object that will be initialized later
+        self.plate_detector = None # Haar Cascade Classifier object
         
         # Confidence settings
         self.confidence_threshold = confidence_threshold
@@ -20,13 +23,13 @@ class NumberPlateRecognition(NumberPlateRecognizer):
         
         # Store confirmed plates
         self.confirmed_plates = {}
-        self.confirmation_count_threshold = 3
+        self.confirmation_count_threshold = 3 # Number of times a plate must be seen to be confirmed
         
         # Exit control
-        self.should_exit = False
-        self.final_confirmed_plate = None
+        self.should_exit = False # Indicates when to exit the detection loop (As soon as it turns true, the program will end)
+        self.final_confirmed_plate = None # Store the final confirmed plate information
         
-        # Status tracking
+        # Status tracking dictionary which allows real time status updates
         self.current_status = {
             'detected_plate': '',
             'confidence': 0.0,
@@ -35,63 +38,66 @@ class NumberPlateRecognition(NumberPlateRecognizer):
             'frame_count': 0
         }
         
-        # Set Tesseract path
+        # Set Tesseract path (tesseract being a text recognition engine)
         pytesseract.pytesseract.tesseract_cmd = r"C:/Program Files/Tesseract-OCR/tesseract.exe"
     
-    def initialize_camera(self) -> bool:
-        """Kamera initialisieren"""
-        self.cap = cv2.VideoCapture(0)
-        if not self.cap.isOpened():
+    def initialize_camera(self) -> bool: # -> bool indicates that this method returns a boolean value
+        """Initialize camera for capturing frames"""
+        self.cap = cv2.VideoCapture(0) # creates a video capture object using the default camera of the system
+        if not self.cap.isOpened(): # if statement to check if camera opened successfully
             self.current_status['status_message'] = "Error: Could not open camera"
             return False
+        # otherwise:
         self.current_status['status_message'] = "Camera initialized"
         return True
     
     def load_haar_cascade(self) -> bool:
-        """Haar Cascade Classifier laden"""
-        if not os.path.exists(self.harcascade):
+        """Load Haar Cascade Classifier for plate detection"""
+        if not os.path.exists(self.harcascade): # Check if the Haar Cascade file exists
             self.current_status['status_message'] = f"Error: Haar Cascade file not found: {self.harcascade}"
             return False
             
-        self.plate_detector = cv2.CascadeClassifier(self.harcascade)
+        self.plate_detector = cv2.CascadeClassifier(self.harcascade) # cv2 loads the trained model and the model gets assigned to plate_detector
         
-        if self.plate_detector.empty():
+        if self.plate_detector.empty(): # Check if the classifier loaded successfully
             self.current_status['status_message'] = "Error: Haar Cascade could not be loaded"
             return False
-            
+        # otherwise:
         self.current_status['status_message'] = "Haar Cascade loaded successfully"
         return True
     
     def calculate_text_confidence(self, plate_img_thresh):
-        """Confidence Level des OCR Results berechnen"""
-        ocr_data = pytesseract.image_to_data(plate_img_thresh, output_type=pytesseract.Output.DICT, config='--psm 7')
+        """Calculate confidence score for OCR-extracted text"""
+        ocr_data = pytesseract.image_to_data(plate_img_thresh, output_type=pytesseract.Output.DICT, config='--psm 7') # code to extract text data from the preprocessed plate image using Tesseract OCR
         
+        # initialize variables to calculate average confidence
         total_confidence = 0
         valid_chars = 0
         
-        for i, text in enumerate(ocr_data['text']):
-            confidence = ocr_data['conf'][i]
+        for i, text in enumerate(ocr_data['text']): # iterate through each detected text element, text can't be empty
+            confidence = ocr_data['conf'][i] # get confidence score for the current text element, between -1 and 100 comes from tesseract (-1 means no text detected)
             text = text.strip()
             
-            if text and confidence > 30 and text.isalnum():
-                total_confidence += confidence
-                valid_chars += 1
+            if text and confidence > 30 and text.isalnum(): # confidence has to be more than 30 percent, and the text has to be either letters or numbers
+                total_confidence += confidence # accumulate confidence scores
+                valid_chars += 1 # count the number of valid characters
         
-        if valid_chars > 0:
-            avg_confidence = total_confidence / valid_chars
-            normalized_confidence = min(avg_confidence / 100.0, 1.0)
-            return normalized_confidence, ocr_data
+        if valid_chars > 0: # to avoid division by zero
+            avg_confidence = total_confidence / valid_chars # calculate average confidence
+            normalized_confidence = min(avg_confidence / 100.0, 1.0) # goes from 0-100 scale to 0.0-1.0 scale
+            return normalized_confidence, ocr_data # return the normalized confidence and the full OCR data, for later use
         else:
-            return 0.0, ocr_data
+            return 0.0, ocr_data # no valid characters detected, return 0 confidence
     
     def is_valid_plate_format(self, text):
-        """Prüfen ob der erkannte Text typischen Nummernschild-Mustern entspricht"""
+        """Validate plate format using regex patterns"""
         if not text:
-            return False
+            return False # empty text is not valid
             
         if len(text) < self.min_plate_length or len(text) > self.max_plate_length:
-            return False
+            return False # check length constraints, cannot be too short or too long
         
+        # list of patterns for valid plate formats
         patterns = [
             r'^[A-Z0-9]{4,8}$',
             r'^[A-Z]{2,3}\d{1,4}$',
@@ -100,84 +106,83 @@ class NumberPlateRecognition(NumberPlateRecognizer):
         ]
         
         for pattern in patterns:
-            if re.match(pattern, text, re.IGNORECASE):
+            if re.match(pattern, text, re.IGNORECASE): # check if text matches any of the patterns, without any case sensitivity
                 return True
                 
-        return False
+        return False # no patterns matched, invalid format
     
     def track_plate_confirmation(self, plate_text, confidence):
-        """Nummernschild-Bestätigung über mehrere Erkennungen hinweg verfolgen"""
-        if confidence < self.confidence_threshold or not self.is_valid_plate_format(plate_text):
+        """Track and confirm plates based on repeated detections"""
+        if confidence < self.confidence_threshold or not self.is_valid_plate_format(plate_text): # if confidence is below threshold or plate format is invalid it doesn't try to confirm it
             return False, confidence
         
-        # Bestätigungs-Tracking aktualisieren
-        if plate_text in self.confirmed_plates:
-            self.confirmed_plates[plate_text]['count'] += 1
-            self.confirmed_plates[plate_text]['last_confidence'] = confidence
-            self.confirmed_plates[plate_text]['max_confidence'] = max(
-                self.confirmed_plates[plate_text]['max_confidence'], confidence
-            )
+        
+        if plate_text in self.confirmed_plates: # if plate text is already being tracked
+            self.confirmed_plates[plate_text]['count'] += 1 # increment detection count
+            self.confirmed_plates[plate_text]['last_confidence'] = confidence # update confidence
+            self.confirmed_plates[plate_text]['max_confidence'] = max(self.confirmed_plates[plate_text]['max_confidence'], confidence)# update max confidence if current is higher
         else:
-            self.confirmed_plates[plate_text] = {
+            self.confirmed_plates[plate_text] = { # plate is detected for the first time, initialize its tracking data
                 'count': 1,
                 'last_confidence': confidence,
                 'max_confidence': confidence
             }
         
-        # Prüfen ob Nummernschild bestätigt ist
-        if self.confirmed_plates[plate_text]['count'] >= self.confirmation_count_threshold:
+        # Check if the plate has been confirmed
+        if self.confirmed_plates[plate_text]['count'] >= self.confirmation_count_threshold: # plate needs to be recognized 3 times to be confirmed
             return True, self.confirmed_plates[plate_text]['max_confidence']
         
-        return False, confidence
+        return False, confidence # not yet confirmed
     
     def preprocess_plate_image(self, plate_img):
-        """Nummernschild-Bild für bessere OCR-Results vorverarbeiten"""
-        gray_plate_img = cv2.cvtColor(plate_img, cv2.COLOR_BGR2GRAY)
-        gray_plate_img = cv2.GaussianBlur(gray_plate_img, (5, 5), 0)
+        """Preprocess plate image for better OCR results"""
+        gray_plate_img = cv2.cvtColor(plate_img, cv2.COLOR_BGR2GRAY) # convert to grayscale
+        gray_plate_img = cv2.GaussianBlur(gray_plate_img, (5, 5), 0) # apply Gaussian blur to reduce noise (from OpenCV library)
         _, plate_img_thresh = cv2.threshold(gray_plate_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
         
-        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3)) # the kernel is a small matrix (3x3) that goes over the image
         plate_img_thresh = cv2.morphologyEx(plate_img_thresh, cv2.MORPH_OPEN, kernel)
         
-        return plate_img_thresh
+        return plate_img_thresh # return the preprocessed image for better OCR readings in later steps
     
     def extract_text_from_plate(self, plate_img):
-        """Text aus Nummernschild mit Confidence-Scoring extrahieren"""
-        processed_plate = self.preprocess_plate_image(plate_img)
+        """text extraction from plate image using OCR"""
+        processed_plate = self.preprocess_plate_image(plate_img) # vorher definiertes Preprocessing aufrufen
         
-        confidence, ocr_data = self.calculate_text_confidence(processed_plate)
+        confidence, ocr_data = self.calculate_text_confidence(processed_plate) # calculate confidence and get OCR data
         
-        plate_text = "".join([text for i, text in enumerate(ocr_data['text']) 
-                            if ocr_data['conf'][i] > 30 and text.strip().isalnum()])
+        plate_text = "".join([text for i, text in enumerate(ocr_data['text']) # concatenate valid text elements
+                            if ocr_data['conf'][i] > 30 and text.strip().isalnum()]) # only consider texts with confidence > 30 and alphanumeric
         
-        return plate_text, confidence, processed_plate
+        return plate_text, confidence, processed_plate # return the extracted text, confidence score, and processed plate image
     
     def process_frame(self, frame):
-        """Einzelnen Frame verarbeiten um Nummernschilder zu erkennen"""
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        plates = self.plate_detector.detectMultiScale(gray, 1.1, 4)
+        """Process a single frame for plate detection and recognition"""
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # convert frame to grayscale
+        plates = self.plate_detector.detectMultiScale(gray, 1.1, 4) # detect plates in the frame 
         
+        # Initialize variables to track the best plate candidate
         best_plate = None
         best_confidence = 0
         best_text = ""
         best_coords = (0, 0, 0, 0)
         
-        # Status zurücksetzen
+        # Reset current status
         self.current_status['detected_plate'] = ''
         self.current_status['confidence'] = 0.0
         self.current_status['is_confirmed'] = False
         self.current_status['status_message'] = 'No plate detected'
         
-        for (x, y, w, h) in plates:
+        for (x, y, w, h) in plates: # iterate through detected plates
             area = w * h
             if area > self.min_area:
+                # exstract text using OCR
                 plate_img = frame[y:y + h, x:x + w]
-                
                 plate_text, confidence, processed_plate = self.extract_text_from_plate(plate_img)
                 
                 is_confirmed, final_confidence = self.track_plate_confirmation(plate_text, confidence)
                 
-                # Wenn confirmed, Exit-Flag setzen und finales Nummernschild speichern
+                # If plate is confirmed, set exit flag and store final plate info
                 if is_confirmed:
                     self.should_exit = True
                     self.final_confirmed_plate = {
@@ -189,7 +194,7 @@ class NumberPlateRecognition(NumberPlateRecognizer):
                     self.current_status['is_confirmed'] = True
                     self.current_status['status_message'] = 'CONFIRMED - Exiting'
                 
-                if final_confidence > best_confidence:
+                if final_confidence > best_confidence: # track the best candidate based on confidence in the current frame
                     best_confidence = final_confidence
                     best_text = plate_text
                     best_coords = (x, y, w, h)
@@ -201,27 +206,28 @@ class NumberPlateRecognition(NumberPlateRecognizer):
                         'processed_image': processed_plate
                     }
         
-        # Besten Kandidaten verarbeiten
         if best_plate:
             x, y, w, h = best_coords
             
-            # Status aktualisieren
+            # Update current status
             self.current_status['detected_plate'] = best_text
             self.current_status['confidence'] = best_confidence
             
+            # Visual feedback on the frame based on confidence and confirmation status
             if best_plate['confirmed']:
-                color = (0, 255, 0)  # Grün für confirmed
+                color = (0, 255, 0)  # green for confirmed
                 status = "CONFIRMED - EXITING SOON"
                 self.current_status['status_message'] = status
             elif best_confidence >= self.confidence_threshold:
-                color = (255, 255, 0)  # Gelb für high confidence
+                color = (255, 255, 0)  # yellow for high confidence
                 status = "HIGH CONFIDENCE"
                 self.current_status['status_message'] = status
             else:
-                color = (0, 165, 255)  # Orange für low confidence
+                color = (0, 165, 255)  # orange for low confidence
                 status = "LOW CONFIDENCE"
                 self.current_status['status_message'] = status
             
+            # Draw rectangle around detected plate, visual feedback
             cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
             
             plate_img = frame[y:y + h, x:x + w]
@@ -237,9 +243,11 @@ class NumberPlateRecognition(NumberPlateRecognizer):
                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
             
             self.draw_confidence_bar(frame_resized, best_confidence, (10, 50))
+            ####################################################################
             
-            return frame_resized, best_text, best_confidence, best_plate['confirmed']
+            return frame_resized, best_text, best_confidence, best_plate['confirmed'] # return the processed frame and plate info
         
+        # No plate detected, return original frame with message
         frame_resized = cv2.resize(frame, (512, 512))
         cv2.putText(frame_resized, "No plate detected", (10, 30), 
                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
@@ -309,16 +317,15 @@ class NumberPlateRecognition(NumberPlateRecognizer):
             
             # In Datenbank speichern
             try:
+                from mail_system.email_system import EmailSender
                 from Db_maneger.Db_maneger import DBManager
+
                 db_manager = DBManager("data", "license_plate.json")
-                success = db_manager.add_license_plate(
-                    license_plate=plate_text,
-                    confidence=confidence,
-                )
-                if success:
-                    print("💾 Nummernschild erfolgreich in Datenbank gespeichert!")
-                else:
-                    print("⚠️ Nummernschild bereits in Datenbank vorhanden")
+                email_sender = EmailSender(db_manager)
+                decision = email_sender.run_email_system(plate_text)
+
+                print(f"Entscheidung aus E-Mail-System: {decision}")
+
             except Exception as e:
                 print(f"❌ Fehler beim Speichern in Datenbank: {e}")
     
