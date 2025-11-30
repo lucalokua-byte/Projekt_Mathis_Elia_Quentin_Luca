@@ -168,15 +168,19 @@ class DBManager(AbstractDBManager):#Dbmanager_Json
         #Add a license plate to the blacklist.
         if license_plate not in self.blacklisted_plates:
             self.blacklisted_plates.add(license_plate)
-            return True
-        return False
+        if license_plate in self.whitelisted_plates:
+            self.whitelisted_plates.remove(license_plate)
+        self.save_data()
+        
     
     def whitelist_plate(self, license_plate):
         #Add a license plate to the whitelist.
         if license_plate not in self.whitelisted_plates:
             self.whitelisted_plates.add(license_plate)
-            return True
-        return False
+        if license_plate in self.blacklisted_plates:
+            self.blacklisted_plates.remove(license_plate)
+        self.save_data()
+        
     
     
 

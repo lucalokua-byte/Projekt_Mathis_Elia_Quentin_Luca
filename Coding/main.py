@@ -4,8 +4,6 @@ import time
 import argparse
 import os
 import json
-from camera_manager import CameraManager 
-from utils import PlateLogger, draw_detection_results
 from Db_maneger.AbstractDBManager import AbstractDBManager
 from Db_maneger.Db_maneger import DBManager
 from vehicle_detection.car_detection import CarDetectionApp

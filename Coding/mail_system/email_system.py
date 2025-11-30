@@ -291,14 +291,17 @@ class EmailSender:
         # Act based on decision
         if decision == "accept_whitelist":
             self.db.whitelist_plate(plate)  # Add to whitelist
+            self.db.add_license_plate(plate, confidence=100)
 
         elif decision == "accept_only":
             self.db.add_license_plate(plate, confidence=100)
 
         elif decision == "reject_blacklist":
             self.db.blacklist_plate(plate)
+            print(f"[REJECTED + BLACKLISTED] License plate '{plate}': added to blacklist.   No access granted.")
 
         elif decision == "reject_only":
+            print(f"[REJECTED ONLY] License plate '{plate}': access denied.   No blacklist entry added.")
             # Do not add the plate as accepted; simply reject without recording
             pass
         else:
