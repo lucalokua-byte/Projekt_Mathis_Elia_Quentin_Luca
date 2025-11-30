@@ -10,7 +10,6 @@ class Camera:
     def __init__(self, camera_index=0):
         self.camera_index = camera_index
         self.cap = None
-        self.frame_count = 0
         self._initialize_camera()
     
     def _initialize_camera(self):
@@ -25,7 +24,6 @@ class Camera:
         ret, frame = self.cap.read()
         if not ret:
             raise Exception(" Error: Cannot read video stream")
-        self.frame_count += 1
         return frame
     
     def get_timestamp(self):
