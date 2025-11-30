@@ -1,13 +1,15 @@
 {
-    "visitors": [
+    "visitors": [],
+    "whitelist_log": [
         {
             "license_plate": "LE75CFG",
-            "date_added": "2025-11-30 16:22:14",
-            "confidence": 0.935
+            "date_added": "2025-11-30 16:56:03",
+            "confidence": 100
         }
     ],
-    "whitelist_log": [],
     "blacklist_log": [],
-    "Whitelisted_plates": [],
+    "Whitelisted_plates": [
+        "LE75CFG"
+    ],
     "Blacklisted_plates": []
 }
