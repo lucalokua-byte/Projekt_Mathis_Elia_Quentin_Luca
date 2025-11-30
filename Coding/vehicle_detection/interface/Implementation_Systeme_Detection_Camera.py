@@ -3,9 +3,6 @@ import mediapipe as mp
 import time
 from typing import Dict, Any
 from interface.Interface_Systeme_Detection import VehicleDetectionSystemInterface
-from detectors.object_detector import ObjectDetector
-from detectors.detection_processor import DetectionProcessor
-from camera.camera_manager import Camera
 
 class CameraVehicleDetectionSystem(VehicleDetectionSystemInterface):
     """
@@ -21,20 +18,9 @@ class CameraVehicleDetectionSystem(VehicleDetectionSystemInterface):
         self.vehicle_detection_start_time = None
         self.threshold = None
         self.detection_mode = None     
-
-    def initialize_components(self) -> bool:
-        try:
-            print(" Initializing components...")
-            self.detector = ObjectDetector()
-            self.camera = Camera()
-            self.processor = DetectionProcessor(detection_mode=self.detection_mode)
-            self.session_start_time = time.time()
-            print(" Detection system initialized!")
-            return True
-        except Exception as e:
-            print(f" Initialization error: {e}")
-            return False
-        
+        self.vehicles_detected = 0
+        self.session_start_time = None
+    
     def configure_detection_vehicles(self, vehicles: str):
         valid_vehicles = {
             "cars_only": ["car", "vehicle"],
@@ -50,10 +36,14 @@ class CameraVehicleDetectionSystem(VehicleDetectionSystemInterface):
     
     def set_duration_threshold(self, duration_seconds: float):
         self.threshold = duration_seconds
-        print(f" Threshold configured: {duration_seconds}s")
+        print(f" Threshold configured: {duration_seconds}s")      
     
     def detect_and_analyze(self, frame) -> Dict[str, Any]:
         try:
+            current_time = time.time()
+            should_stop = False
+            detection_duration = 0.0        
+
             # Convert frame to RGB for MediaPipe
             rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
@@ -65,8 +55,19 @@ class CameraVehicleDetectionSystem(VehicleDetectionSystemInterface):
             # Process detections and draw bounding boxes
             processed_frame, vehicle_detected = self.processor.process_detections(detection_result, frame)
             
-            # Check consecutive detection duration
-            should_stop, detection_duration = self._check_consecutive_detection(vehicle_detected)
+            # Check consecutive detection duration       
+            if vehicle_detected:
+                if self.vehicle_detection_start_time is None:
+                    self.vehicle_detection_start_time = current_time
+                    print(" Vehicle detection started...")
+                
+                detection_duration = current_time - self.vehicle_detection_start_time
+                
+                if detection_duration >= self.threshold:
+                     should_stop, detection_duration = True, detection_duration
+            else:
+                self.vehicle_detection_start_time = None
+
             
             # Count detected vehicles
             if vehicle_detected:
@@ -90,30 +91,12 @@ class CameraVehicleDetectionSystem(VehicleDetectionSystemInterface):
                 "error": str(e)
             }
     
-    def execute_alert_actions(self, duration_seconds):
-        print(f" ALERT: Vehicle detected for more than {duration_seconds} seconds!")
-        print(" Stopping Vehicle detection ...")
-        self._stop_system()
-    
-    def generate_report(self) -> Dict[str, Any]:
-        session_duration = time.time() - self.session_start_time
-        
-        return {
-            "session_duration": session_duration,
-            "vehicles_detected": self.vehicles_detected,
-            "detection_mode": self.detection_mode,
-            "alert_threshold": self.threshold,
-            "end_timestamp": time.strftime("%Y-%m-%d %H:%M:%S")
-        }
-    
     def show_report(self):
         """Display a temporary detection report"""
         try:
             print("\n" + "=" * 50)
             print("TEMPORARY DETECTION REPORT")
             print("=" * 50)
-
-            report = self.generate_report()
             
             # Display information
             print(f" Session duration: {time.time() - self.session_start_time:.1f} seconds")
@@ -127,37 +110,3 @@ class CameraVehicleDetectionSystem(VehicleDetectionSystemInterface):
         
         except Exception as e:
             print(f"Error generating report: {e}")
-    
-        
-    def _check_consecutive_detection(self, vehicle_detected: bool):
-        current_time = time.time()
-        
-        if vehicle_detected:
-            if self.vehicle_detection_start_time is None:
-                self.vehicle_detection_start_time = current_time
-                print(" Vehicle detection started...")
-            
-            detection_duration = current_time - self.vehicle_detection_start_time
-            
-            if detection_duration >= self.threshold:
-                return True, detection_duration
-                
-            return False, detection_duration
-        else:
-            self.vehicle_detection_start_time = None
-            return False, 0
-    
-    def _add_overlays(self, frame, detection_duration: float):
-        # Add detection timer overlay
-        timer_text = f"Detection: {detection_duration:.1f}s"
-        color = (0, 0, 255) if detection_duration >= self.threshold else (255, 255, 255)
-        cv2.putText(frame, timer_text, (10, 30),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
-                
-        return frame
-    
-    def _stop_system(self):
-        self.running = False
-        if self.camera:
-            self.camera.release()
-        cv2.destroyAllWindows()

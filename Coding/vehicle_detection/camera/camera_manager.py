@@ -36,4 +36,3 @@ class Camera:
         """Release camera resources and cleanup"""
         if self.cap:
             self.cap.release()
-            print(" Camera released")

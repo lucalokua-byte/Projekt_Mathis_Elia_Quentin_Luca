@@ -26,6 +26,6 @@ class VehicleDetectionSystemInterface(ABC):
         pass
     
     @abstractmethod
-    def execute_alert_actions(self):
-        """Execute defined actions after prolonged detection"""
+    def show_report(self):
+        """Displays real-time detection statistics including session duration, vehicle count, detection mode, and alert threshold for instant monitoring"""
         pass

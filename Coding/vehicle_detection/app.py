@@ -2,6 +2,9 @@ import cv2
 import time
 import os
 import sys
+from vehicle_detection.detectors.object_detector import ObjectDetector
+from vehicle_detection.detectors.detection_processor import DetectionProcessor
+from vehicle_detection.camera.camera_manager import Camera
 
 # Add current directory to Python path to import local modules
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -21,13 +24,12 @@ class CarDetectionApp:
         self.running = False
         self.threshold = 1.0  # seconds
         self.detection_mode = "all_vehicles"  # options: cars_only, standard_vehicles, all_vehicles
-
+    
     def stop(self):
         #Stop the application gracefully
-        print("\nStopping vehicle detection system...")
         self.running = False
-        if hasattr(self.system, '_stop_system'):
-            self.system._stop_system()
+        if self.system.camera:
+            self.system.camera.release()
         cv2.destroyAllWindows()
     
     def run(self):
@@ -39,9 +41,15 @@ class CarDetectionApp:
         self.system.configure_detection_vehicles(self.detection_mode)
         self.system.set_duration_threshold(self.threshold)
         
-
-        # Initialize camera and detection components
-        if not self.system.initialize_components():
+        try:
+            print(" Initializing components...")
+            self.system.detector = ObjectDetector()
+            self.system.camera = Camera()
+            self.system.processor = DetectionProcessor(detection_mode=self.detection_mode)
+            self.system.session_start_time = time.time()
+            print(" Detection system initialized!")
+        except Exception as e:
+            print(f" Initialization error: {e}")
             return
         
         print("\nDetection in progress...")
@@ -61,7 +69,9 @@ class CarDetectionApp:
                 
                 # Stop if vehicle detected for 2+ seconds
                 if results["threshold_reached"]:
-                    self.system.execute_alert_actions(self.threshold)
+                    print(f" Vehicle detected for more than {self.threshold} seconds!")
+                    print(" Stopping Vehicle detection ...")
+                    self.stop()
                     break
                 
                 # Display the processed frame
