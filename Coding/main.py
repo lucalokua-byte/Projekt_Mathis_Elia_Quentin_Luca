@@ -23,10 +23,11 @@ def main():
             print("\n" + "="*50)
             print("STARTING VEHICLE DETECTION SYSTEM")
             print("="*50)
-            app = CarDetectionApp()
+            car_detection = CarDetectionApp()
+            car_detection.run()
             
             # Modified run method to check for 'q' key
-            should_exit = app.run()
+            should_exit = car_detection.run()
             if should_exit:
                 print("\nVehicle detection stopped by user")
                 break

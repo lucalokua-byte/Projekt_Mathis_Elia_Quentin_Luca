@@ -78,10 +78,13 @@ class CarDetectionApp:
                 
                 # Handle keyboard input
                 key = cv2.waitKey(1) & 0xFF
-                if key == ord('q'):  # Quit application
-                    self.stop()
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    cv2.destroyAllWindows()
+                    return True  # Signal to exit completely
                 elif key == ord('r'):  # Show temporary report
                     self.system.show_report()
+                
+                return False  # Continue running
                     
             except Exception as e:
                 print(f"Error: {e}")
