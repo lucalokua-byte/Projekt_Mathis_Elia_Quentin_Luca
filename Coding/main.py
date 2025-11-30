@@ -24,12 +24,11 @@ def main():
             print("STARTING VEHICLE DETECTION SYSTEM")
             print("="*50)
             car_detection = CarDetectionApp()
-            car_detection.run()
             
-            # Modified run method to check for 'q' key
+            # Run vehicle detection - returns True if user pressed 'q'
             should_exit = car_detection.run()
             if should_exit:
-                print("\nVehicle detection stopped by user")
+                print("\nVehicle detection stopped by user - EXITING")
                 break
 
             # Parse command-line arguments
@@ -52,51 +51,35 @@ def main():
             print("STARTING NUMBER PLATE RECOGNITION")
             print("="*50)
             
-            # Modified to check for exit flag
+            # Start plate recognition
             recognizer.begin_plate_detection()
             
             # Check if user pressed 'q' during plate recognition
             if recognizer.should_exit and not recognizer.final_confirmed_plate:
-                print("\nNumber plate recognition stopped by user")
+                print("\nNumber plate recognition stopped by user - EXITING")
                 break
             
             # After completion, retrieve the status
             final_plate = recognizer.get_confirmed_plate()
             if final_plate:
                 plate_text = final_plate['text']
-                print(f"\n✅ Final confirmed plate: {plate_text}")
-                
-                # Email security system integration
-                print("\n" + "="*50)
-                print("STARTING EMAIL SECURITY SYSTEM")
-                print("="*50)
-                email_sender = EmailSender(db_manager=DBManager("data", "license_plates.json"))
-                decision = email_sender.run_email_system(plate_text)
-                print(f"Final decision: {decision}")
-                
-                # Process the decision
-                if decision == 'accept_whitelist':
-                    print("Vehicle accepted and added to whitelist")
-                elif decision == 'accept_only':
-                    print("Vehicle accepted temporarily")
-                elif decision == 'reject_blacklist':
-                    print("Vehicle rejected and added to blacklist")
-                elif decision == 'reject_only':
-                    print("Vehicle rejected temporarily")
-                elif decision == 'timeout':
-                    print("No decision received within timeout period")
+                confidence = final_plate['confidence']
+                print(f"\nFinal confirmed plate: {plate_text} (Confidence: {confidence:.1%})")
+        
+            else:
+                print("\nNo plate confirmed - restarting system")
             
             # Clean up resources
             recognizer.close_camera_window()
             
             print("\n" + "="*50)
             print("MAIN PROGRAM COMPLETED SUCCESSFULLY!")
-            print("RESTARTING SYSTEM IN 3 SECONDS...")
-            print("Press 'q' during vehicle detection to stop completely")
+            print("\nRESTARTING SYSTEM IN 5 SECONDS...")
+            print("Press 'q' during detection to stop completely")
             print("="*50)
             
-            # Kurze Pause bevor Neustart mit Möglichkeit zum Beenden
-            for i in range(3, 0, -1):
+            # Kurze Pause bevor Neustart
+            for i in range(5, 0, -1):
                 print(f"Restarting in {i} seconds...", end='\r')
                 time.sleep(1)
             
@@ -104,11 +87,11 @@ def main():
             print(" " * 50, end='\r')
             
         except KeyboardInterrupt:
-            print("\n\nProgram manually stopped by user")
+            print("\n\nProgram manually stopped by user (Ctrl+C)")
             break
         except Exception as e:
             print(f"\n\nAn error occurred: {e}")
-            print("🔄 Restarting system in 5 seconds...")
+            print("Restarting system in 5 seconds...")
             for i in range(5, 0, -1):
                 print(f"Restarting in {i} seconds...", end='\r')
                 time.sleep(1)
