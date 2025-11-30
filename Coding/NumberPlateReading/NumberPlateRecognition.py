@@ -255,7 +255,8 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
         return frame_resized, "", 0.0, False
     
     def draw_confidence_bar(self, frame, confidence, position):
-        """Confidence Bar Visualisierung zeichnen"""
+        """Draw confidence bar on the frame"""
+        # entire method using cv2 and basic drawing functions to visualize confidence level on the frame in real time
         bar_width = 200
         bar_height = 20
         x, y = position
@@ -279,11 +280,21 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
     
     def get_detection_status(self) -> dict:
-        """Aktuellen Erkennungsstatus abrufen"""
+        """Get current detection status"""
         return self.current_status.copy()
-    
+    '''
+    current status contains (with different values):
+    self.current_status = {
+            'detected_plate': '',
+            'confidence': 0.0,
+            'is_confirmed': False,
+            'status_message': 'Initializing...',
+            'frame_count': 0
+            }
+    '''
+        
     def set_confidence_threshold(self, threshold: float):
-        """Confidence Threshold setzen"""
+        """set confidence threshold for plate confirmation"""
         self.confidence_threshold = max(0.0, min(1.0, threshold))
     
     def get_confirmed_plate(self) -> dict:
