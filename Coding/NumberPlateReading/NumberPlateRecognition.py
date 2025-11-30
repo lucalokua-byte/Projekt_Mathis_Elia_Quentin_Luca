@@ -317,16 +317,15 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
             
             # In Datenbank speichern
             try:
+                from email_system import EmailSender
                 from Db_maneger.Db_maneger import DBManager
+
                 db_manager = DBManager("data", "license_plate.json")
-                success = db_manager.add_license_plate(
-                    license_plate=plate_text,
-                    confidence=confidence,
-                )
-                if success:
-                    print("💾 Nummernschild erfolgreich in Datenbank gespeichert!")
-                else:
-                    print("⚠️ Nummernschild bereits in Datenbank vorhanden")
+                email_sender = EmailSender(db_manager)
+                decision = email_sender.run_email_system(plate_text)
+
+                print(f"Entscheidung aus E-Mail-System: {decision}")
+                
             except Exception as e:
                 print(f"❌ Fehler beim Speichern in Datenbank: {e}")
     
