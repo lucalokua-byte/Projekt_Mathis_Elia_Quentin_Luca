@@ -317,7 +317,7 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
             
             # In Datenbank speichern
             try:
-                from email_system import EmailSender
+                from mail_system.email_system import EmailSender
                 from Db_maneger.Db_maneger import DBManager
 
                 db_manager = DBManager("data", "license_plate.json")
@@ -325,7 +325,7 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
                 decision = email_sender.run_email_system(plate_text)
 
                 print(f"Entscheidung aus E-Mail-System: {decision}")
-                
+
             except Exception as e:
                 print(f"❌ Fehler beim Speichern in Datenbank: {e}")
     
