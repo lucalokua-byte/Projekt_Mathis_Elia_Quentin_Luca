@@ -11,7 +11,11 @@
         "-s",
         "./Coding",
         "-p",
+<<<<<<< HEAD
         "test_*.py"
+=======
+        "test*.py"
+>>>>>>> d0099c620119873100e445d6f4eb9c7e1e2476ab
     ],
     "python.testing.pytestEnabled": false,
     "python.testing.unittestEnabled": true
