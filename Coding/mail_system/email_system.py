@@ -169,7 +169,7 @@ class EmailSender:
                 """
                 sender = None  # Reference to the parent EmailSender instance
                 
-                def get_email_answer(self,):
+                def do_GET(self,):
                     """
                     Handle GET requests from email button clicks.
                     Routes correspond to the 4 decision options in the email.
@@ -203,7 +203,7 @@ class EmailSender:
                             # Show homepage for any other route
                             self._send_homepage()
                     
-                def send_response(self, title, message):
+                def _send_response(self, title, message):
                     """
                     Send a confirmation HTML page after a decision is made.
                     Also starts the program termination process in a separate thread.
@@ -228,7 +228,7 @@ class EmailSender:
                     # Start cleanup in separate thread to avoid blocking
                     threading.Thread(target=self.sender.cleanup_system).start()
                 
-                def send_homepage(self):
+                def _send_homepage(self):
                     """
                     Display the server homepage with current vehicle information.
                     This page is shown when accessing the server root or unknown routes.
@@ -270,7 +270,7 @@ class EmailSender:
             print(f"Server error: {e}")
             return False
 
-    def email_shutdown_system(self):
+    def cleanup_system(self):
         """
         Clean up after a decision has been made by processing it and shutting down.
         """
