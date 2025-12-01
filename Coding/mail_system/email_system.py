@@ -303,7 +303,7 @@ class EmailSender:
         elif decision == "reject_only":
             print(f"[REJECTED ONLY] License plate '{plate}': access denied.   No blacklist entry added.")
             # Do not add the plate as accepted; simply reject without recording
-            pass
+            return
         else:
             print("Unknown decision. No action taken.")
 
