@@ -1,0 +1,101 @@
+{
+    "visitors": [
+        {
+            "license_plate": "LMN456",
+            "date_added": "2025-12-01 14:45:00",
+            "confidence": null
+        }
+    ],
+    "whitelist_log": [
+        {
+            "license_plate": "ABC123",
+            "date_added": "2025-12-01 13:48:27",
+            "confidence": 90.2
+        },
+        {
+            "license_plate": "ABC123",
+            "date_added": "2025-12-01 13:54:52",
+            "confidence": 90.2
+        },
+        {
+            "license_plate": "ABC123",
+            "date_added": "2025-12-01 13:55:06",
+            "confidence": 90.2
+        },
+        {
+            "license_plate": "ABC123",
+            "date_added": "2025-12-01 13:55:14",
+            "confidence": 90.2
+        },
+        {
+            "license_plate": "ABC123",
+            "date_added": "2025-12-01 13:55:31",
+            "confidence": 90.2
+        },
+        {
+            "license_plate": "ABC123",
+            "date_added": "2025-12-01 13:55:56",
+            "confidence": 90.2
+        },
+        {
+            "license_plate": "ABC123",
+            "date_added": "2025-12-01 14:20:46",
+            "confidence": 90.2
+        },
+        {
+            "license_plate": "ABC123",
+            "date_added": "2025-12-01 14:45:00",
+            "confidence": 90.2
+        }
+    ],
+    "blacklist_log": [
+        {
+            "license_plate": "DEF456",
+            "date_added": "2025-12-01 13:48:27",
+            "confidence": null
+        },
+        {
+            "license_plate": "DEF456",
+            "date_added": "2025-12-01 13:54:52",
+            "confidence": null
+        },
+        {
+            "license_plate": "DEF456",
+            "date_added": "2025-12-01 13:55:06",
+            "confidence": null
+        },
+        {
+            "license_plate": "DEF456",
+            "date_added": "2025-12-01 13:55:14",
+            "confidence": null
+        },
+        {
+            "license_plate": "DEF456",
+            "date_added": "2025-12-01 13:55:31",
+            "confidence": null
+        },
+        {
+            "license_plate": "DEF456",
+            "date_added": "2025-12-01 13:55:56",
+            "confidence": null
+        },
+        {
+            "license_plate": "DEF456",
+            "date_added": "2025-12-01 14:20:46",
+            "confidence": null
+        },
+        {
+            "license_plate": "DEF456",
+            "date_added": "2025-12-01 14:45:00",
+            "confidence": null
+        }
+    ],
+    "Whitelisted_plates": [
+        "XYZ789",
+        "ABC123"
+    ],
+    "Blacklisted_plates": [
+        "GHI789",
+        "DEF456"
+    ]
+}
