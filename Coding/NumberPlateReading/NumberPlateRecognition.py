@@ -319,26 +319,67 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
             timestamp = self.final_confirmed_plate.get('timestamp', time.time())
             
             print("\n" + "="*50)
-            print("🚗 NUMBERSCHILD ERKANNT UND BESTÄTIGT!")
+            print("NUMBERSCHILD ERKANNT UND BESTÄTIGT!")
             print("="*50)
             print(f"Nummernschild: {plate_text}")
             print(f"Confidence: {confidence:.1%}")
             print(f"Zeitstempel: {time.strftime('%Y-%m-%d %H:%M:%S')}")
             print("="*50)
             
-            # In Datenbank speichern
+            # In Datenbank speichern mit besserer Fehlerbehandlung
             try:
-                from mail_system.email_system import EmailSender
+                # Korrekte Importe
                 from Db_maneger.Db_maneger import DBManager
-
+                from mail_system.email_system import EmailSender
+                
+                # Datenbank-Manager erstellen
                 db_manager = DBManager("data", "license_plate.json")
+                
+                # Prüfe Whitelist
+                if plate_text in db_manager.whitelisted_plates:
+                    print(f"Nummernschild {plate_text} ist in der Whitelist.")
+                    db_manager.add_license_plate(plate_text, confidence)
+                    db_manager.save_data()
+                    return
+                
+                # Prüfe ob Nummernschild bereits in Datenbank existiert
+                existing_record = db_manager.find(plate_text, verbose=False)
+                if existing_record and plate_text not in db_manager.blacklisted_plates and plate_text not in db_manager.whitelisted_plates:
+                    print(f"Numberplate {plate_text} found in database, requesting email system for decision...")
+                    email_sender = EmailSender(db_manager)
+                    decision = email_sender.run_email_system(plate_text)
+                    return
+
+                # Prüfe Blacklist
+                if plate_text in db_manager.blacklisted_plates:
+                    print(f"Numberplate {plate_text} is in the blacklist, gate stays closed.")
+                    db_manager.add_license_plate(plate_text, confidence)
+                    db_manager.save_data()
+                    return
+                
+                # Für neue Nummernschilder: Email-System starten
                 email_sender = EmailSender(db_manager)
                 decision = email_sender.run_email_system(plate_text)
+                
+                # Entscheidung verarbeiten
+                if decision == 'accept_whitelist':
+                    db_manager.whitelist_plate(plate_text)
+                    db_manager.add_license_plate(plate_text, confidence=confidence)
+                elif decision == 'accept_only':
+                    db_manager.add_license_plate(plate_text, confidence=confidence)
+                elif decision == 'reject_blacklist':
+                    db_manager.blacklist_plate(plate_text)
+                elif decision == 'reject_only':
+                    # Nur ablehnen, nicht in Datenbank speichern
+                    pass
+                    
+                db_manager.save_data()
 
-                print(f"Entscheidung aus E-Mail-System: {decision}")
-
+            except ImportError as e:
+                print(f"Import-Fehler: {e}")
+                print("DBManager oder EmailSender nicht verfügbar - Datenbank-Speicherung übersprungen")
             except Exception as e:
-                print(f"❌ Fehler beim Speichern in Datenbank: {e}")
+                print(f"Fehler beim Speichern in Datenbank: {e}")
     
     def begin_plate_detection(self):
         """Hauptausführungsmethode"""
@@ -349,9 +390,9 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
             self.cap.release()
             return
         
-        print(f"🚀 Number Plate Recognition gestartet (Confidence threshold: {self.confidence_threshold:.0%})")
-        print("📋 Das Programm beendet sich automatisch sobald ein Nummernschild bestätigt wurde!")
-        print("⏹️  Drücke 'q' für manuelles Beenden")
+        print(f"Number Plate Recognition gestartet (Confidence threshold: {self.confidence_threshold:.0%})")
+        print("Das Programm beendet sich automatisch sobald ein Nummernschild bestätigt wurde!")
+        print("Drücke 'q' für manuelles Beenden")
         
         frame_count = 0
         
@@ -359,7 +400,7 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
             while True:
                 # Prüfe ob ein Nummernschild confirmed wurde
                 if self.should_exit:
-                    print("\n✅ Nummernschild bestätigt! Beende Programm...")
+                    print("\nNummernschild bestätigt! Beende Programm...")
                     break
                 
                 ret, frame = self.cap.read()
@@ -373,11 +414,11 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
                 cv2.imshow("NumberPlateRecognition", processed_frame)
                 
                 if confirmed:
-                    print(f"✅ CONFIRMED: {plate_text} (Confidence: {confidence:.1%})")
+                    print(f"CONFIRMED: {plate_text} (Confidence: {confidence:.1%})")
                     # Kurze Verzögerung damit man das Ergebnis noch sehen kann
                     cv2.waitKey(1000)
                 elif plate_text and confidence >= self.confidence_threshold:
-                    print(f"⚠️  Candidate: {plate_text} (Confidence: {confidence:.1%})")
+                    print(f"Candidate: {plate_text} (Confidence: {confidence:.1%})")
                 
                 frame_count += 1
                 self.current_status['frame_count'] = frame_count
@@ -387,7 +428,8 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
                 
                 key = cv2.waitKey(1) & 0xFF
                 if key == ord('q'):
-                    print("\n⏹️  Manuell beendet durch Benutzer")
+                    print("\nManuell beendet durch Benutzer")
+                    self.should_exit = True
                     break
                 elif key == ord('r'):
                     self.confirmed_plates.clear()
@@ -395,7 +437,7 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
                     print("Confirmed plates reset")
                     
         except KeyboardInterrupt:
-            print("\n⏹️  Programm durch Benutzer unterbrochen")
+            print("\nProgramm durch Benutzer unterbrochen")
         except Exception as e:
             print(f"❌ Ein Fehler ist aufgetreten: {e}")
         finally:

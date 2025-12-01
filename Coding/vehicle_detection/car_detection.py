@@ -34,7 +34,7 @@ class CarDetectionApp:
         cv2.destroyAllWindows()          #Close all OpenCV windows
     
     def run(self):
-        #Main application loop
+        """Main application loop with proper exit handling"""
         print("Vehicle Detection System")
         print("=" * 40)
         
@@ -51,7 +51,7 @@ class CarDetectionApp:
             print(" Detection system initialized!")
         except Exception as e:                 #Handle initialization errors
             print(f" Initialization error: {e}")
-            return
+            return False
         
         print("\nDetection in progress...")
         print(f" Automatic shutdown after {self.threshold}s of continuous detection") 
@@ -62,27 +62,43 @@ class CarDetectionApp:
         # Main detection loop
         while self.running:
             try:
-                frame = self.system.camera.read_frame()         # Read frame from camera
-                results = self.system.detect_and_analyze(frame)      # Call the detect_and_analyze method
-                
-                # Stop if vehicle detected for X- seconds
-                if results["threshold_reached"]:
-                    print(" Stopping Vehicle detection ...")
-                    self.stop()
+                # Capture frame from camera
+                frame = self.system.camera.read_frame()
+                if frame is None:
+                    print("Error: Could not read frame from camera")
                     break
                 
-                cv2.imshow('Vehicle Detection', results["processed_image"])        # Show processed image in a window
+                # Detect and analyze vehicles in the frame
+                results = self.system.detect_and_analyze(frame)
                 
-                # Handle keyboard input
-                key = cv2.waitKey(1) & 0xFF  # Wait for key press
-                if key == ord('q'):    # Quit application
+                # Stop if vehicle detected for threshold seconds
+
+                if results["threshold_reached"]:
+                    print(" Continuous vehicle detection confirmed - proceeding to plate recognition")
                     self.stop()
+                    return False  # Normal completion - continue to plate recognition
+                
+                cv2.imshow('Vehicle Detection', results["processed_image"])        # Show processed image in a window
+
+                # Handle keyboard input - ONLY ONE waitKey() call
+                key = cv2.waitKey(1) & 0xFF
+                if key == ord('q'):
+                    print("\ Vehicle detection stopped by user")
+
+                    self.stop()
+                    return True  # Signal to exit completely
                 elif key == ord('r'):  # Show temporary report
                     self.system.show_report() # Display detection report
                     
+                # NO return statement here - continue the loop
+                    
             except Exception as e:
-                print(f"Error: {e}")
+                print(f"Error in detection loop: {e}")
                 self.stop()
-
+                return False
+        
+        # Cleanup
+        self.stop()
+        return False
         
     
