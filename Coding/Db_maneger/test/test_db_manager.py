@@ -6,7 +6,7 @@ currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 
-from Db_maneger import DBManager
+import Db_maneger as DBManager
 
 
 class TestDbManager(unittest.TestCase):
@@ -77,6 +77,38 @@ class TestDbManager(unittest.TestCase):
         record = self.db.find("FINDME")
         self.assertIsNotNone(record)
         self.assertEqual(record['license_plate'], "FINDME")
+
+    def test_blacklist_plate(self):
+        self.db.blacklist_plate("BLACK123")
+        self.assertIn("BLACK123", self.db.blacklisted_plates)
+
+    def test_whitelist_plate(self):
+        self.db.whitelist_plate("WHITE123")
+        self.assertIn("WHITE123", self.db.whitelisted_plates)
+
+    def test_blacklist_to_whitelist_transition(self):
+        self.db.blacklist_plate("SWITCH123")
+        self.db.whitelist_plate("SWITCH123")
+        self.assertNotIn("SWITCH123", self.db.blacklisted_plates)
+        self.assertIn("SWITCH123", self.db.whitelisted_plates)
+        
+    def test_add_plate_whitelist_enforced_reject(self):
+        self.db.enforce_Whielist = True
+        self.db.whitelist_plate("ALLOWED123")
+        result = self.db.add_license_plate("BLOCKED456")
+        self.assertFalse(result)  # BLOCKED456 not whitelisted
+
+    def test_add_blacklisted_plate_should_fail(self):
+        self.db.blacklist_plate("BAD123")
+        result = self.db.add_license_plate("BAD123")
+        self.assertFalse(result)
+
+    def test_clear_database(self):
+        self.db.add_license_plate("TO_CLEAR")
+        self.db.clear_database()
+        self.assertEqual(len(self.db.list_all()), 0)
+
+
 
 if __name__ == '__main__':
     unittest.main()
