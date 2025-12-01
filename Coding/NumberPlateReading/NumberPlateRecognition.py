@@ -319,11 +319,11 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
             timestamp = self.final_confirmed_plate.get('timestamp', time.time())
             
             print("\n" + "="*50)
-            print("NUMBERSCHILD ERKANNT UND BESTÄTIGT!")
+            print("NUMBERPLATE RECOGNISED AND CONFIRMED!")
             print("="*50)
-            print(f"Nummernschild: {plate_text}")
+            print(f"Numberplate: {plate_text}")
             print(f"Confidence: {confidence:.1%}")
-            print(f"Zeitstempel: {time.strftime('%Y-%m-%d %H:%M:%S')}")
+            print(f"Timestamp: {time.strftime('%Y-%m-%d %H:%M:%S')}")
             print("="*50)
             
             # In Datenbank speichern mit besserer Fehlerbehandlung
@@ -337,7 +337,7 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
                 
                 # Prüfe Whitelist
                 if plate_text in db_manager.whitelisted_plates:
-                    print(f"Nummernschild {plate_text} ist in der Whitelist.")
+                    print(f"Numberplate {plate_text} is in the whitelist.")
                     db_manager.add_license_plate(plate_text, confidence)
                     db_manager.save_data()
                     return
@@ -376,10 +376,10 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
                 db_manager.save_data()
 
             except ImportError as e:
-                print(f"Import-Fehler: {e}")
-                print("DBManager oder EmailSender nicht verfügbar - Datenbank-Speicherung übersprungen")
+                print(f"Import-error: {e}")
+                print("DBManager or EmailSender not available - Skip database saving.")
             except Exception as e:
-                print(f"Fehler beim Speichern in Datenbank: {e}")
+                print(f"Error while saving to database: {e}")
     
     def begin_plate_detection(self):
         """Hauptausführungsmethode"""
@@ -390,9 +390,9 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
             self.cap.release()
             return
         
-        print(f"Number Plate Recognition gestartet (Confidence threshold: {self.confidence_threshold:.0%})")
-        print("Das Programm beendet sich automatisch sobald ein Nummernschild bestätigt wurde!")
-        print("Drücke 'q' für manuelles Beenden")
+        print(f"Number Plate Recognition started (Confidence threshold: {self.confidence_threshold:.0%})")
+        print("Programm will end as soon as a number plate is confirmed.")
+        print("Press 'q' to manually stop the program.")
         
         frame_count = 0
         
@@ -400,7 +400,7 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
             while True:
                 # Prüfe ob ein Nummernschild confirmed wurde
                 if self.should_exit:
-                    print("\nNummernschild bestätigt! Beende Programm...")
+                    print("\nNumber plate confirmed - exiting detection loop")
                     break
                 
                 ret, frame = self.cap.read()
@@ -428,7 +428,6 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
                 
                 key = cv2.waitKey(1) & 0xFF
                 if key == ord('q'):
-                    print("\nManuell beendet durch Benutzer")
                     self.should_exit = True
                     break
                 elif key == ord('r'):
@@ -437,9 +436,9 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
                     print("Confirmed plates reset")
                     
         except KeyboardInterrupt:
-            print("\nProgramm durch Benutzer unterbrochen")
+            print("\nProgram manually stopped by user")
         except Exception as e:
-            print(f"❌ Ein Fehler ist aufgetreten: {e}")
+            print(f"An Error has occured: {e}")
         finally:
             # Zeige das endgültige Ergebnis an
             self.display_final_result()
@@ -451,4 +450,3 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
             self.cap.release()
         cv2.destroyAllWindows()
         self.current_status['status_message'] = 'Stopped'
-        print(" Number Plate Recognition beendet.")

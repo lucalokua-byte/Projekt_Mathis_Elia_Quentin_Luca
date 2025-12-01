@@ -87,7 +87,7 @@ def main():
             print(" " * 50, end='\r')
             
         except KeyboardInterrupt:
-            print("\n\nProgram manually stopped by user (Ctrl+C)")
+            print("\n\nProgram manually stopped by user")
             break
         except Exception as e:
             print(f"\n\nAn error occurred: {e}")

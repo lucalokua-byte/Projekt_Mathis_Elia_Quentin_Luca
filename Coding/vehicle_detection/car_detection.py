@@ -83,8 +83,6 @@ class CarDetectionApp:
                 # Handle keyboard input - ONLY ONE waitKey() call
                 key = cv2.waitKey(1) & 0xFF
                 if key == ord('q'):
-                    print("\ Vehicle detection stopped by user")
-
                     self.stop()
                     return True  # Signal to exit completely
                 elif key == ord('r'):  # Show temporary report
