@@ -135,7 +135,7 @@ class EmailSender:
             # Create MIME multipart message for HTML email
             msg = MIMEMultipart()
             msg['From'] = self.gmail_config['email']
-            msg['To'] = self.gmail_config['email']
+            msg['To'] = self.gmail_config['email']                                  # 'marco.scherrer@fhnw.ch'
             msg['Subject'] = subject
             msg.attach(MIMEText(html_body, 'html', 'utf-8'))
             
