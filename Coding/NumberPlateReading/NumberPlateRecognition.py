@@ -336,7 +336,7 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
                 
                 # check if the plate is whitelisted
                 if plate_text in db_manager.whitelisted_plates:
-                    print(f"Numberplate {plate_text} is in the whitelist.")
+                    print(f"Numberplate {plate_text} is in the whitelist, opening gate directly.")
                     db_manager.add_license_plate(plate_text, confidence)
                     db_manager.save_data()
                     return # gate can open directly

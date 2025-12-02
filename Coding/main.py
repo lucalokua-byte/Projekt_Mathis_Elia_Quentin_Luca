@@ -78,7 +78,7 @@ def main():
             print("Press 'q' during detection to stop completely")
             print("="*50)
             
-            # Kurze Pause bevor Neustart
+            # short countdown before restarting
             for i in range(5, 0, -1):
                 print(f"Restarting in {i} seconds...", end='\r')
                 time.sleep(1)
