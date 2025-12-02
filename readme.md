@@ -28,75 +28,8 @@ NummerTelefonnummer : 06 98 74 28 87  -> Mathis Schmitt muss dann validieren
 ![Use Case Diagram](https://www.plantuml.com/plantuml/png/RP7DQiCm48JlUeh19-VWDoWXRGszb2Oqf3qBUUCiaQKYRHj2wRlNYkoG7uCEoywdtHbf4KK7-UwiihGLY4VWTYTeE90HzaufRSG75AlWsw0xbEjZ5Efc1NJ4q1oPvS5HGBc95B9-Qepg1qTEHRbnU-SF3dNWdv7CjL9fhNQj9HIlRCX5mifg8JmQGp4YRo_mgu3-ZAwgQewo9kblurc7sQtqJhh1rS0xP4skmPiNthBHANeYSgA7gfhKpy1fmFAB75w6qHVzcjnni7-ZVEvOo7AKUsiNr9FLPZz5zLX-DYH_L-lF_Vbaz3-rwDEaR_y7)
 
 
-**Funktions-Diagramm**
-
-```mermaid
-flowchart TD
-  %% ==== Styles ====
-  classDef actor fill:#ffffff,stroke:#333,stroke-dasharray:5 5;
-  classDef usecase fill:#eef5ff,stroke:#333;
-
-  %% ==== Actors (outside boundary) ====
-  Owner["Owner"]:::actor
-  Known["Visitor (Known Plate)"]:::actor
-  Unknown["Visitor (Unknown Plate)"]:::actor
-  PushSvc["Push Notification Service"]:::actor
-  Programm["Programm/Code"]:::actor
-
-  %% ==== System boundary ====
-  subgraph System["License Plate Access Control System"]
-    M([Detect Motion]):::usecase
-    C([Activate Camera]):::usecase
-    L([Recognize License Plate]):::usecase
-    W([Check Whitelist]):::usecase
-    O([Open Gate]):::usecase
-    D([Deny Access]):::usecase
-    N([Send Notification]):::usecase
-    APP([Decision via App]):::usecase
-    WL([Manage Whitelist]):::usecase
-    BL([Manage BlackList]):::usecase
-    LOG([Log Access Attempts]):::usecase
-    FD([Detect System Fault]):::usecase
-    FN([Send Fault Notification]):::usecase
-  end
-
-  %% ==== Actor triggers ====
-  Programm --> Unknown
-  Programm --> Known
-  Known --> M
-  Unknown --> M
-
-  %% ==== Core flow ====
-  M --> C --> L --> W
-  
-
-  %% Logging (always executed with core use cases) ≈ <<include>>
-  L --> LOG
-  O --> LOG
-  D --> LOG
-
-  %% ==== Branching (labels explain conditions) ====
- 
-
-  L -- "unknown plate" --> N
-
-  %% ==== Notifications & decisions ====
-  N --> Owner
-  N --> PushSvc
-  Owner --> APP
-  APP --> O
-  APP --> D
-
-  %% ==== Management ====
-  Owner --> WL
-  Owner --> BL
-
-  %% ==== Fault handling (fail-safe: gate stays closed) ====
-  FD --> FN --> Owner
-
- 
-
-  ```
+**Class diagram**
+[![Class diagram](https://img.plantuml.biz/plantuml/svg/ZLJBReCm4BnRyZ_igJqb7v1351ggDbBJHa7gtJZRr94naMqEwUFVowE0mK1otPtP7S-mh8nbscQ9fEGUrYz1546u2PxsmNO1x_Wfk4G8qIAt8bLm1n7oJ0jxWUXYB2QKSCcCWOG91PG8PL5_C8uGnCPgnctui6MA7L6xpV_1pTngrgRkkz3NB8bHxoIpk4UU7fNuAcPLMqFamkJyPwOEiYslcMv61-SpV5EIQ_kbf0KagDcmYW8z08QYK9VUubDEgOYfzXZDn9rEEHfJGQ2hmNzOwR2dzJ6tLaQe3ZYmg3QtwPGvp6RBlWUTplZZ7PYprwaEgwQaR_drHPCPjFGRWDqqRY3u-L0o4eVdn0JE-TJTq7gjDhFv_6SvT2UJ-alIrViPKLcIHoxAazo_BKfMURVyK_m1)](https://editor.plantuml.com/uml/ZLJBReCm4BnRyZ_igJqb7v1351ggDbBJHa7gtJZRr94naMqEwUFVowE0mK1otPtP7S-mh8nbscQ9fEGUrYz1546u2PxsmNO1x_Wfk4G8qIAt8bLm1n7oJ0jxWUXYB2QKSCcCWOG91PG8PL5_C8uGnCPgnctui6MA7L6xpV_1pTngrgRkkz3NB8bHxoIpk4UU7fNuAcPLMqFamkJyPwOEiYslcMv61-SpV5EIQ_kbf0KagDcmYW8z08QYK9VUubDEgOYfzXZDn9rEEHfJGQ2hmNzOwR2dzJ6tLaQe3ZYmg3QtwPGvp6RBlWUTplZZ7PYprwaEgwQaR_drHPCPjFGRWDqqRY3u-L0o4eVdn0JE-TJTq7gjDhFv_6SvT2UJ-alIrViPKLcIHoxAazo_BKfMURVyK_m1)
 
 **Ziele**
 - Ein sicheres Zugangssystem mit Kennzeichenerkennung erstellen.
@@ -180,3 +113,6 @@ Gestensensor (5) – Zusätzliche Sicherheitsstufe
 
 Energieeffiziente Kameraaktivierung (2) – Optional zur Energieeinsparung
 
+
+
+[def]: [https://editor.plantuml.com/uml/ZLJBReCm4BnRyZ_igJqb7v1351ggDbBJHa7gtJZRr94naMqEwUFVowE0mK1otPtP7S-mh8nbscQ9fEGUrYz1546u2PxsmNO1x_Wfk4G8qIAt8bLm1n7oJ0jxWUXYB2QKSCcCWOG91PG8PL5_C8uGnCPgnctui6MA7L6xpV_1pTngrgRkkz3NB8bHxoIpk4UU7fNuAcPLMqFamkJyPwOEiYslcMv61-SpV5EIQ_kbf0KagDcmYW8z08QYK9VUubDEgOYfzXZDn9rEEHfJGQ2hmNzOwR2dzJ6tLaQe3ZYmg3QtwPGvp6RBlWUTplZZ7PYprwaEgwQaR_drHPCPjFGRWDqqRY3u-L0o4eVdn0JE-TJTq7gjDhFv_6SvT2UJ-alIrViPKLcIHoxAazo_BKfMURVyK_m1]
