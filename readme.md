@@ -1,12 +1,12 @@
 # Readme: Projekt Software Engineering
 
 **Einleitung**
-Im Rahmen des Moduls Software Engineering entwickeln wir ein intelligentes Sicherheitssystem zur automatischen Erkennung von Fahrzeugkennzeichen und Steuerung eines Tores. Wird ein bekanntes Kennzeichen erkannt, öffnet sich das Tor nur nach dem richtigen Handsignal. Bei unbekannten Kennzeichen wird der Eigentümer über eine App benachrichtigt und kann den Zutritt erlauben oder verweigern.
+Im Rahmen des Moduls Software Engineering entwickeln wir ein intelligentes Sicherheitssystem zur automatischen Erkennung von Fahrzeugen, Fahrzeugkennzeichen und Steuerung eines Tores. Wird ein bekanntes Kennzeichen erkannt, öffnet sich das Tor. Bei unbekannten Kennzeichen wird der Eigentümer über eine e-mail benachrichtigt und kann den Zutritt erlauben oder verweigern ; indem er das Fahrzeug zur Whitelist oder Blacklist hinzufügt.
 
 Das Projekt wird in Python entwickelt, folgt dem Scrum-Modell und nutzt GitHub zur Versionsverwaltung. Ziel ist ein sicheres, zuverlässiges und benutzerfreundliches System, das durch moderne Bildverarbeitung und Sensorik den Zugang effizient und geschützt steuert.
 
 **Build-Anleitung**
-Es muss python Version 3.12 benutzt werden, für die beste Kompatibilität mit Mediapipe. Die benötigten libraries sind die folgenden die mann mit pip install im vs code installieren kann:
+Es muss python Version 3.11 benutzt werden, für die beste Kompatibilität mit Mediapipe. Die benötigten libraries sind die folgenden die mann mit pip install im vs code installieren kann:
 - opencv-python
 - pytesseract
 - numpy
@@ -17,7 +17,12 @@ Es muss python Version 3.12 benutzt werden, für die beste Kompatibilität mit M
 - secure-smtplib email-validator
 Für pytesseract muss auf https://github.com/UB-Mannheim/tesseract/wiki Tesseract installiert werden, bevor man den pip install pytesseract macht. Die Installation sollte im folgenden Dateipfad sein: C:\Program Files\Tesseract-OCR\tesseract.exe
 
-Zur Funktion des Codes den main.py File ausführen. Dann wird die Kamera vom Device eingeschalten, um in einem Bild ein Auto zu erkennen. Wenn ein Auto mindestens eine Sekunde vor der Kamera steht, dann schließt sich diese. Dann öffnet sich die nächste Seite, um das Nummernschild zu erkennen. Sobald das Nummernschild bestätigt ist, kommt dieses in einer Email an projetseqlem@gmail.com geschickt, in der Email kann dann der Benutzer auf einen von 4 Optionen einen "Button"(es sind links) drücken um lokal die Antwort zu speichern und den code weiterlaufen lassen. Die 4 Optionen sind: Tor öffnen und Nummernschild zur Whitelist adden; Nur das Tor öffnen; Tor zulassen und Nummernschild zur Blacklist adden; Nur das Tor zulassen. Diese Auswahl wird dann in der Datenbank gespeichert. 
+Zur Funktion des Codes den main.py File ausführen. Dann wird die Kamera vom Device eingeschalten, um in einem Bild ein Auto zu erkennen. Wenn ein Auto mindestens eine Sekunde vor der Kamera steht, dann schließt sich diese. Dann öffnet sich die nächste Seite, um das Nummernschild zu erkennen. Sobald das Nummernschild bestätigt ist, kommt dieses in einer Email an projetseqlem@gmail.com geschickt, in der Email kann dann der Benutzer auf einen von 4 Optionen einen "Button"(es sind links) drücken um lokal die Antwort zu speichern und den code weiterlaufen lassen. Die 4 Optionen sind: Tor öffnen und Nummernschild zur Whitelist adden; Nur das Tor öffnen; Tor zulassen und Nummernschild zur Blacklist adden; Nur das Tor zulassen. Diese Auswahl wird dann in der Datenbank gespeichert.
+
+**Anmeldung zur E-Mail-Adresse**
+Konto : projetseqlem@gmail.com
+Kennword : kelvintrinat25
+NummerTelefonnummer : 06 98 74 28 87  -> Mathis Schmitt muss dann validieren
 
 **Use Case  Diagramm**
 ![Use Case Diagram](https://www.plantuml.com/plantuml/png/RP7DQiCm48JlUeh19-VWDoWXRGszb2Oqf3qBUUCiaQKYRHj2wRlNYkoG7uCEoywdtHbf4KK7-UwiihGLY4VWTYTeE90HzaufRSG75AlWsw0xbEjZ5Efc1NJ4q1oPvS5HGBc95B9-Qepg1qTEHRbnU-SF3dNWdv7CjL9fhNQj9HIlRCX5mifg8JmQGp4YRo_mgu3-ZAwgQewo9kblurc7sQtqJhh1rS0xP4skmPiNthBHANeYSgA7gfhKpy1fmFAB75w6qHVzcjnni7-ZVEvOo7AKUsiNr9FLPZz5zLX-DYH_L-lF_Vbaz3-rwDEaR_y7)
@@ -96,19 +101,13 @@ flowchart TD
 **Ziele**
 - Ein sicheres Zugangssystem mit Kennzeichenerkennung erstellen.
 
-- Das Tor öffnet sich nur bei korrekter Kennzeichen- und Handzeichen-Kombination.
+- Das Tor öffnet sich nur bei korrekter Kennzeichen.
 
-- Besitzer verwalten das System über eine mobile App.
+- Besitzer verwalten das System über eine E-mail.
 
-- Das System muss ein Kennzeichen innerhalb von 10 Sekunden erkennen.
+- Das System muss ein Kennzeichen erkennen.
 
-- Die maximale Fehlerrate für die Erkennung darf 20 % nicht überschreiten.
-
-- Das System muss rund um die Uhr (24/7) funktionsfähig sein.
-
-- Bei einem Ausfall muss das Tor geschlossen bleiben.
-
-- Die Datenschutzgesetze (DSGVO/DSG) müssen eingehalten werden.
+- Die maximale Fehlerrate für die Erkennung darf 30 % nicht überschreiten.
 
 - Drahtlose Kommunikation muss verschlüsselt werden (WPA3).
 
@@ -120,7 +119,7 @@ flowchart TD
 + Blackbox Testing: Tests manuell durchführen
 + Source Code Management: Mit GitHub
 + Vorgehensmodell: Scrum
-+ **Funktionale Anforderungen:** unser System soll Nummernschilder erkennen als Sicherheitssystem. Einerseits wenn eine bekannte Nummer erkannt wird, muss eine Kombination von Handsignalen gegeben werden um das Tor zu öffnen. Andererseits wenn eine unbekannte Nummer vor dem Tor steht, wird erstmals eine Nachricht an das Telefon des Eigentümers geschickt. Dieser hat dann die Auswahl, 
++ **Funktionale Anforderungen:** unser System soll Nummernschilder erkennen als Sicherheitssystem. Einerseits wenn eine bekannte Nummer erkannt wird, soll sich das Tor öffnen. Andererseits wenn eine unbekannte Nummer vor dem Tor steht, wird erstmals eine Nachricht an das Mail des Eigentümers geschickt. Dieser hat dann die Auswahl, 4 Optionen einen "Button"(es sind links) drücken um lokal die Antwort zu speichern und den code weiterlaufen lassen. Die 4 Optionen sind: Tor öffnen und Nummernschild zur Whitelist adden; Nur das Tor öffnen; Tor zulassen und Nummernschild zur Blacklist adden; Nur das Tor zulassen. Diese Auswahl wird dann in der Datenbank gespeichert.
 + **Nicht-Funktionale Anforderungen:** 
 
     **Performanz:**

@@ -298,22 +298,23 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
         self.confidence_threshold = max(0.0, min(1.0, threshold))
     
     def get_confirmed_plate(self) -> dict:
-        """Bestätigtes Nummernschild abrufen"""
+        """Retrieve the final confirmed plate information"""
         return self.final_confirmed_plate.copy() if self.final_confirmed_plate else None
     
     def cleanup_confirmed_plates(self):
-        """Alte unbestätigte Nummernschilder aus Tracking entfernen"""
+        """delete unconfirmed plates from tracking dictionary"""
         plates_to_remove = []
-        for plate_text, data in self.confirmed_plates.items():
-            if data['count'] < 2:
+        for plate_text, data in self.confirmed_plates.items(): # identify plates which should be removed
+            if data['count'] < 2: # check if plate was detected less than 2 times
                 plates_to_remove.append(plate_text)
         
-        for plate_text in plates_to_remove:
+        for plate_text in plates_to_remove: # remove the identified plates
             del self.confirmed_plates[plate_text]
     
     def display_final_result(self):
-        """Finales bestätigtes Nummernschild-Resultat anzeigen und in DB speichern"""
-        if self.final_confirmed_plate:
+        """Display final confirmed plate information and save to database"""
+        if self.final_confirmed_plate: # check if a plate was confirmed
+            # extract plate details from the dictionary
             plate_text = self.final_confirmed_plate['text']
             confidence = self.final_confirmed_plate['confidence']
             timestamp = self.final_confirmed_plate.get('timestamp', time.time())
@@ -325,43 +326,41 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
             print(f"Confidence: {confidence:.1%}")
             print(f"Timestamp: {time.strftime('%Y-%m-%d %H:%M:%S')}")
             print("="*50)
-            
-            # In Datenbank speichern mit besserer Fehlerbehandlung
+        
             try:
-                # Korrekte Importe
                 from Db_maneger.Db_maneger import DBManager
                 from mail_system.email_system import EmailSender
                 
-                # Datenbank-Manager erstellen
+                # Initialize database manager
                 db_manager = DBManager("data", "license_plate.json")
                 
-                # Prüfe Whitelist
+                # check if the plate is whitelisted
                 if plate_text in db_manager.whitelisted_plates:
                     print(f"Numberplate {plate_text} is in the whitelist.")
                     db_manager.add_license_plate(plate_text, confidence)
                     db_manager.save_data()
-                    return
+                    return # gate can open directly
                 
-                # Prüfe ob Nummernschild bereits in Datenbank existiert
+                # check if the plate exists in the database
                 existing_record = db_manager.find(plate_text, verbose=False)
                 if existing_record and plate_text not in db_manager.blacklisted_plates and plate_text not in db_manager.whitelisted_plates:
                     print(f"Numberplate {plate_text} found in database, requesting email system for decision...")
                     email_sender = EmailSender(db_manager)
-                    decision = email_sender.run_email_system(plate_text)
+                    decision = email_sender.run_email_system(plate_text) # send email for verification if plate is known but not whitelisted or blacklisted
                     return
 
-                # Prüfe Blacklist
+                # Check if the plate is blacklisted
                 if plate_text in db_manager.blacklisted_plates:
                     print(f"Numberplate {plate_text} is in the blacklist, gate stays closed.")
                     db_manager.add_license_plate(plate_text, confidence)
                     db_manager.save_data()
                     return
                 
-                # Für neue Nummernschilder: Email-System starten
+                # For new number plates, run the email system for verification
                 email_sender = EmailSender(db_manager)
                 decision = email_sender.run_email_system(plate_text)
                 
-                # Entscheidung verarbeiten
+                # Handle decision from email system
                 if decision == 'accept_whitelist':
                     db_manager.whitelist_plate(plate_text)
                     db_manager.add_license_plate(plate_text, confidence=confidence)
@@ -370,7 +369,7 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
                 elif decision == 'reject_blacklist':
                     db_manager.blacklist_plate(plate_text)
                 elif decision == 'reject_only':
-                    # Nur ablehnen, nicht in Datenbank speichern
+                    # Do nothing, just log the rejection
                     pass
                     
                 db_manager.save_data()
@@ -382,11 +381,11 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
                 print(f"Error while saving to database: {e}")
     
     def begin_plate_detection(self):
-        """Hauptausführungsmethode"""
-        if not self.initialize_camera():
+        """Start the number plate detection process"""
+        if not self.initialize_camera(): # initialize camera and check if successful
             return
         
-        if not self.load_haar_cascade():
+        if not self.load_haar_cascade(): # load Haar and check if it was successful
             self.cap.release()
             return
         
@@ -394,38 +393,40 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
         print("Programm will end as soon as a number plate is confirmed.")
         print("Press 'q' to manually stop the program.")
         
-        frame_count = 0
+        frame_count = 0 # counter for processed frames
         
-        try:
-            while True:
-                # Prüfe ob ein Nummernschild confirmed wurde
+        try: 
+            while True: # main detection loop
+                # Check for exit condition
                 if self.should_exit:
                     print("\nNumber plate confirmed - exiting detection loop")
                     break
                 
-                ret, frame = self.cap.read()
+                ret, frame = self.cap.read() # reads a frame from the camera
                 
                 if not ret:
                     self.current_status['status_message'] = "Error: Could not read frame from camera"
                     break
                 
-                processed_frame, plate_text, confidence, confirmed = self.process_frame(frame)
+                processed_frame, plate_text, confidence, confirmed = self.process_frame(frame) # process the frame
                 
-                cv2.imshow("NumberPlateRecognition", processed_frame)
+                cv2.imshow("NumberPlateRecognition", processed_frame) # display the processed frame
                 
+                # handle the detection results
                 if confirmed:
-                    print(f"CONFIRMED: {plate_text} (Confidence: {confidence:.1%})")
-                    # Kurze Verzögerung damit man das Ergebnis noch sehen kann
+                    print(f"CONFIRMED: {plate_text} (Confidence: {confidence:.1%})") # plate confirmed
+                    # short pause to show confirmation
                     cv2.waitKey(1000)
                 elif plate_text and confidence >= self.confidence_threshold:
-                    print(f"Candidate: {plate_text} (Confidence: {confidence:.1%})")
+                    print(f"Candidate: {plate_text} (Confidence: {confidence:.1%})") # plate candidate with high confidence
                 
                 frame_count += 1
                 self.current_status['frame_count'] = frame_count
                 
                 if frame_count % 30 == 0:
-                    self.cleanup_confirmed_plates()
+                    self.cleanup_confirmed_plates() # cleans up unconfirmed plates every 30 frames
                 
+                #this part checks for user input to either exit or reset tracking
                 key = cv2.waitKey(1) & 0xFF
                 if key == ord('q'):
                     self.should_exit = True
@@ -440,13 +441,13 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
         except Exception as e:
             print(f"An Error has occured: {e}")
         finally:
-            # Zeige das endgültige Ergebnis an
+            # Show the final result and clean up resources
             self.display_final_result()
             self.close_camera_window()
     
     def close_camera_window(self):
-        """Ressourcen freigeben"""
+        """Close all camera windows and release resources"""
         if self.cap:
-            self.cap.release()
-        cv2.destroyAllWindows()
-        self.current_status['status_message'] = 'Stopped'
+            self.cap.release() # release the camera resource
+        cv2.destroyAllWindows() # closes the opencv windows
+        self.current_status['status_message'] = 'Stopped' # update program status
