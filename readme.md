@@ -19,10 +19,6 @@ Für pytesseract muss auf https://github.com/UB-Mannheim/tesseract/wiki Tesserac
 
 Zur Funktion des Codes den main.py File ausführen. Dann wird die Kamera vom Device eingeschalten, um in einem Bild ein Auto zu erkennen. Wenn ein Auto mindestens eine Sekunde vor der Kamera steht, dann schließt sich diese. Dann öffnet sich die nächste Seite, um das Nummernschild zu erkennen. Sobald das Nummernschild bestätigt ist, kommt dieses in einer Email an projetseqlem@gmail.com geschickt, in der Email kann dann der Benutzer auf einen von 4 Optionen einen "Button"(es sind links) drücken um lokal die Antwort zu speichern und den code weiterlaufen lassen. Die 4 Optionen sind: Tor öffnen und Nummernschild zur Whitelist adden; Nur das Tor öffnen; Tor zulassen und Nummernschild zur Blacklist adden; Nur das Tor zulassen. Diese Auswahl wird dann in der Datenbank gespeichert.
 
-**Anmeldung zur E-Mail-Adresse**
-Konto : projetseqlem@gmail.com
-Kennword : kelvintrinat25
-NummerTelefonnummer : 06 98 74 28 87  -> Mathis Schmitt muss dann validieren
 
 **Use Case  Diagramm**
 ![Use Case Diagram](https://www.plantuml.com/plantuml/png/RP7DQiCm48JlUeh19-VWDoWXRGszb2Oqf3qBUUCiaQKYRHj2wRlNYkoG7uCEoywdtHbf4KK7-UwiihGLY4VWTYTeE90HzaufRSG75AlWsw0xbEjZ5Efc1NJ4q1oPvS5HGBc95B9-Qepg1qTEHRbnU-SF3dNWdv7CjL9fhNQj9HIlRCX5mifg8JmQGp4YRo_mgu3-ZAwgQewo9kblurc7sQtqJhh1rS0xP4skmPiNthBHANeYSgA7gfhKpy1fmFAB75w6qHVzcjnni7-ZVEvOo7AKUsiNr9FLPZz5zLX-DYH_L-lF_Vbaz3-rwDEaR_y7)
