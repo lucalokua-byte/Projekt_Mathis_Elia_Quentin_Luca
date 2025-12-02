@@ -9,9 +9,9 @@ from unittest.mock import Mock, patch, MagicMock
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 # Import your modules
-from vehicle_detection.camera.camera_manager import Camera
-from vehicle_detection.detectors.detection_processor import DetectionProcessor, ObjectDetector
-from interface.Implementation_Systeme_Detection_Camera import CameraVehicleDetectionSystem
+from Coding.vehicle_detection.camera.camera_manager import Camera
+from Coding.vehicle_detection.detectors.detection_processor import DetectionProcessor, ObjectDetector
+from Coding.vehicle_detection.interface.Implementation_Systeme_Detection_Camera import CameraVehicleDetectionSystem
 
 
 class TestDetectionProcessor(unittest.TestCase):
