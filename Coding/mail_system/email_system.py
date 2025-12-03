@@ -333,10 +333,14 @@ class EmailSender:
         # Wait for decision with timeout
         start = time.time()
         while time.time() - start < timeout:
-            if self.decision:
+            if self.decision:  # If we have a decision
+                # Double-check that cleanup is complete
+                time.sleep(0.1)  # Small delay to ensure cleanup
                 return self.decision
-            if self._should_exit:
-                return self.decision
+            if self._should_exit:  # If system says to exit
+                # Give a moment for decision to be set
+                time.sleep(0.1)
+                return self.decision if self.decision else "exit_no_decision"
             time.sleep(0.5)  # Check every 500ms
         
         return "timeout"
