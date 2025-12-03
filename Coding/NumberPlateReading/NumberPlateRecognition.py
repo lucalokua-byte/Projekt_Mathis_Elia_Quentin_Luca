@@ -113,9 +113,9 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
     
     def track_plate_confirmation(self, plate_text, confidence):
         """Track and confirm plates based on repeated detections"""
-        if confidence < self.confidence_threshold or not self.is_valid_plate_format(plate_text): # if confidence is below threshold or plate format is invalid it doesn't try to confirm it
+        # if confidence is below threshold or plate format is invalid it doesn't try to confirm it
+        if confidence < self.confidence_threshold or not self.is_valid_plate_format(plate_text): 
             return False, confidence
-        
         
         if plate_text in self.confirmed_plates: # if plate text is already being tracked
             self.confirmed_plates[plate_text]['count'] += 1 # increment detection count
@@ -152,7 +152,7 @@ class NumberPlateRecognition(NumberPlateRecognizer): # The NumberPlateRecognitio
         confidence, ocr_data = self.calculate_text_confidence(processed_plate) # calculate confidence and get OCR data
         
         plate_text = "".join([text for i, text in enumerate(ocr_data['text']) # concatenate valid text elements
-                            if ocr_data['conf'][i] > 30 and text.strip().isalnum()]) # only consider texts with confidence > 30 and alphanumeric
+        if ocr_data['conf'][i] > 30 and text.strip().isalnum()]) # only consider texts with confidence > 30 and alphanumeric
         
         return plate_text, confidence, processed_plate # return the extracted text, confidence score, and processed plate image
     
