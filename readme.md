@@ -6,7 +6,7 @@ Im Rahmen des Moduls Software Engineering entwickeln wir ein intelligentes Siche
 Das Projekt wird in Python entwickelt, folgt dem Scrum-Modell und nutzt GitHub zur Versionsverwaltung. Ziel ist ein sicheres, zuverlässiges und benutzerfreundliches System, das durch moderne Bildverarbeitung und Sensorik den Zugang effizient und geschützt steuert.
 
 **Build-Anleitung**
-Es muss python Version 3.11 benutzt werden, für die beste Kompatibilität mit Mediapipe. Die benötigten libraries sind die folgenden die mann mit pip install im vs code installieren kann:
+Es muss python Version 3.12 benutzt werden, für die beste Kompatibilität mit Mediapipe. Die benötigten libraries sind die folgenden die mann mit pip install im vs code installieren kann:
 - opencv-python
 - pytesseract
 - numpy
