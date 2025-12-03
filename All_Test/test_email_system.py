@@ -3,10 +3,12 @@ from unittest.mock import MagicMock, patch
 import sys
 import os
 
-
 # PATH CONFIGURATION
 
+# Get the absolute path to the project root directory
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Add the project root to Python's module search path
 sys.path.insert(0, project_root)
 
 # Specifically add the Coding directory for module imports
@@ -16,32 +18,32 @@ if os.path.exists(coding_dir):
 
 # MOCK SETUP FOR EXTERNAL DEPENDENCIES
 
-# Mock the Interface module and its AbstractDBManager class
+# Create mock for Interface module
 sys.modules['Interface'] = MagicMock()
 sys.modules['Interface.AbstractDBManager'] = MagicMock()
 
+# Define a mock class to simulate the DBManager behavior
 class MockDBManager:
-    """
-    Mock implementation of DBManager for testing.
-    Replaces the actual database manager to isolate EmailSender tests.
-    """
+    """Mock implementation of DBManager for testing purposes."""
+    
     def __init__(self, *args, **kwargs):
+        """Initialize mock DBManager."""
         pass
     
     def whitelist_plate(self, plate):
-        """Mock method to simulate whitelisting a license plate."""
+        """Mock method to whitelist a license plate."""
         return f"Mock: Whitelisting plate {plate}"
     
     def blacklist_plate(self, plate):
-        """Mock method to simulate blacklisting a license plate."""
+        """Mock method to blacklist a license plate."""
         return f"Mock: Blacklisting plate {plate}"
     
     def add_license_plate(self, plate, confidence):
-        """Mock method to simulate adding a license plate with confidence score."""
+        """Mock method to add a license plate with confidence score."""
         return f"Mock: Adding plate {plate} with confidence {confidence}"
     
     def save_data(self):
-        """Mock method to simulate saving data."""
+        """Mock method to save data."""
         return "Mock: Saving data"
 
 # Replace the actual DBManager module with our mock
@@ -201,7 +203,19 @@ class TestEmailSender(unittest.TestCase):
         with patch('builtins.print'):
             result = self.sender.wait_for_decision(timeout=5)
         
-        self.assertIsNone(result)
+        # Should return "exit_no_decision" when exit flag is True and no decision
+        self.assertEqual(result, "exit_no_decision")
+    
+    def test_wait_for_decision_should_exit_with_decision(self):
+        """Test waiting for decision when exit flag is set but decision exists."""
+        self.sender._should_exit = True
+        self.sender.decision = 'accept_only'
+        
+        with patch('builtins.print'):
+            result = self.sender.wait_for_decision(timeout=5)
+        
+        # Should return the decision when exit flag is True but decision exists
+        self.assertEqual(result, 'accept_only')
     
     @patch('Coding.mail_system.email_system.HTTPServer')
     @patch('Coding.mail_system.email_system.threading.Thread')
@@ -276,7 +290,7 @@ class TestEmailSender(unittest.TestCase):
         mock_start.assert_called_once()
         mock_send.assert_called_once_with("PLATE-789")
 
-# EDGE CASE TESTS
+# EDGE CASE TESTS FOR EMAILSENDER
 
 class TestEmailSenderEdgeCases(unittest.TestCase):
     """Tests for edge cases and boundary conditions of EmailSender."""
@@ -386,14 +400,14 @@ class CustomTestResult(unittest.TextTestResult):
         """Called when a test fails."""
         super().addFailure(test, err)
         test_name = self.getDescription(test)
-        print(f"   TEST FAILED: {test_name}")
+        print(f"  TEST FAILED: {test_name}")
         print(f"    Error: {err[1]}")
     
     def addError(self, test, err):
         """Called when a test encounters an error."""
         super().addError(test, err)
         test_name = self.getDescription(test)
-        print(f"   TEST ERROR: {test_name}")
+        print(f"  TEST ERROR: {test_name}")
         print(f"    Exception: {err[1]}")
 
 class CustomTestRunner(unittest.TextTestRunner):
