@@ -42,7 +42,7 @@ In der Email kann dann der Benutzer auf einen von 4 Optionen einen "Button"(es s
 
 - Drahtlose Kommunikation muss verschlüsselt werden (WPA3).
 
-- Gespeicherte Daten werden spätestens nach 14 Tagen gelöscht.
+
 
 
 **Anforderungen :**
