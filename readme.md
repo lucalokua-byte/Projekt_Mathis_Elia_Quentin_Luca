@@ -73,7 +73,6 @@ In der Email kann dann der Benutzer auf einen von 4 Optionen einen "Button"(es s
     Datenbank: Gesicherte Liste der zugelassenen Kennzeichen. (Software)
     Gestenprüfung: Algorithmus zur Validierung der Geste. (Software)
     Alarm/Benachrichtigung: System zum schnellen Senden von Push-Nachrichten. (Software)
-    Mobile App: Schnittstelle zum Empfangen des Alarms und zur Fernsteuerung. (Software)
     Protokollierung: Speicherung von Zugängen und Versuchen. (Software)
 
 
